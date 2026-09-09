@@ -4,6 +4,7 @@
 
 [![Instagram](https://img.shields.io/badge/Instagram-@photosby__dodo-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/photosby_dodo/)
 [![Live Demo](https://img.shields.io/badge/Demo-Live%20Website-00dbe7?style=for-the-badge)](https://dodoloiu1.github.io/calculator-majorat/)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdodoloiu1%2Fcalculator-majorat)
 
 ---
 
