@@ -105,14 +105,14 @@
           <input type="range" id="inputGuestsSlider" min="15" max="120" step="5" value="30" class="custom-range">
           
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-1">
-            <!-- Butoane Step -5 / +5 -->
-            <div class="flex items-center gap-2">
+            <!-- Butoane Step -5 / +5 (lungi cat slider-ul pe telefon, compacte pe laptop) -->
+            <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
               <button id="btnMinus5" type="button" 
-                      class="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
+                      class="w-full sm:w-auto py-2 sm:py-1.5 px-3.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 text-center transition-all shadow-sm">
                 -5 pers
               </button>
               <button id="btnPlus5" type="button" 
-                      class="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
+                      class="w-full sm:w-auto py-2 sm:py-1.5 px-3.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 text-center transition-all shadow-sm">
                 +5 pers
               </button>
             </div>
