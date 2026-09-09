@@ -1,6 +1,7 @@
 # 📸 Calculator Foto Majorat • Photos by Dodo
 
-> Calculator simplu și rapid pentru servicii foto de majorat. Design curat (fundal alb, chenare gri, accent navy blue).
+> Calculator simplu, curat și rapid pentru servicii foto de majorat.
+> Paletă strictă de 3 culori: **Alb**, **Gri**, **Navy Blue**.
 
 [![Instagram](https://img.shields.io/badge/Instagram-@photosby__dodo-1e3a8a?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/photosby_dodo/)
 [![Live Demo](https://img.shields.io/badge/Demo-Live%20Website-1e3a8a?style=for-the-badge)](https://dodoloiu1.github.io/calculator-majorat/)
@@ -19,21 +20,19 @@ $$\text{PREȚ} = 200 + 80 \times (\text{ORE} - 1) + 5 \times \max(0, \text{PERSO
 - $\max(0, \text{persoane} - 30)$ = dacă sunt sub 30 persoane, nu se scade din preț
 - **Transport** = costul deplasării (dacă este cazul)
 
-### Exemple verificate:
-- **6h / 20 persoane** → 600 lei
-- **6h / 30 persoane** → 600 lei
-- **6h / 50 persoane** → 700 lei
-- **7h / 50 persoane** → 780 lei
-- **7h / 60 persoane** → 830 lei
-- **9h / 60 persoane** → 990 lei
+---
+
+## ⏰ Politică de Punctualitate & Program
+
+- **Sosire la locație:** Cu **30 de minute mai devreme** de ora stabilită (pentru montarea și testarea echipamentului).
+- **Fotografii:** Se realizează strict în intervalul orar stabilit.
 
 ---
 
-## ⚡ Caracteristici
+## 🎨 Design & Specificații
 
-- **Fundal alb**, **chenare gri**, **accent navy blue** (`#1e3a8a`).
-- **Slider simplu** pentru număr persoane cu incrementare din 5 în 5 (butoane `-5` / `+5`).
-- **Interval orar** (Ora început + Ora final cu calcul automat durata).
-- **Câmp opțional pentru Transport / Deplasare**.
-- **Trimitere calcul pe WhatsApp** printr-un click.
-- **Link direct către Instagram**: [@photosby_dodo](https://www.instagram.com/photosby_dodo/).
+- **Paletă 3 culori:** Alb (`#FFFFFF`), Gri (`#F8FAFC`, `#E2E8F0`, `#64748B`), Navy Blue (`#0F172A`, `#1E3A8A`).
+- **Slider simplu:** Număr de persoane cu pas de 5 și butoane `-5` / `+5`.
+- **Interval orar:** Selectare din listă (fără slidere de ore).
+- **Transport:** Câmp numeric opțional.
+- **Acțiune directă:** Copiere calcul în clipboard și link Instagram [@photosby_dodo](https://www.instagram.com/photosby_dodo/).
