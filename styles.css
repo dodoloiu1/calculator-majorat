@@ -1,0 +1,98 @@
+/* Custom CSS for Calculator Majorat - Photos by Dodo */
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090a0f;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2233;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00dbe7;
+}
+
+/* Custom Range Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: #1e2030;
+  height: 8px;
+  border-radius: 6px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #00f2ff;
+  cursor: pointer;
+  box-shadow: 0 0 15px #00f2ff;
+  border: 3px solid #090a0f;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 20px #00f2ff, 0 0 35px rgba(0, 242, 255, 0.4);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #00f2ff;
+  cursor: pointer;
+  box-shadow: 0 0 15px #00f2ff;
+  border: 3px solid #090a0f;
+  transition: transform 0.15s ease;
+}
+
+/* Custom checkbox styling */
+input[type="checkbox"] {
+  accent-color: #00dbe7;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+input[type="radio"] {
+  accent-color: #00dbe7;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+/* Print Optimization for PDF Saving */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  header, footer, #sectionAddons, .preset-chip, button, a#btnWhatsApp, a[href*="instagram"] {
+    display: none !important;
+  }
+  #summaryCard {
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #000 !important;
+  }
+  #txtTotalPrice {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+  }
+  .lg\:col-span-7 {
+    display: block !important;
+  }
+  .lg\:col-span-5 {
+    display: block !important;
+    margin-top: 2rem !important;
+  }
+}

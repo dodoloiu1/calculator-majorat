@@ -1,0 +1,19 @@
+{
+  "name": "calculator-majorat",
+  "version": "1.0.0",
+  "description": "Calculator estimativ costuri majorat - Photos by Dodo",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "majorat",
+    "calculator",
+    "photos-by-dodo",
+    "evenimente",
+    "fotograf-majorat"
+  ],
+  "author": "Photos by Dodo (@photosby_dodo)",
+  "license": "MIT"
+}
