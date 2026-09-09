@@ -104,20 +104,20 @@
         <div class="space-y-3 pt-1">
           <input type="range" id="inputGuestsSlider" min="15" max="120" step="5" value="30" class="custom-range">
           
-          <div class="flex items-center justify-between pt-1">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-1">
             <!-- Butoane Step -5 / +5 -->
             <div class="flex items-center gap-2">
               <button id="btnMinus5" type="button" 
-                      class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
+                      class="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
                 -5 pers
               </button>
               <button id="btnPlus5" type="button" 
-                      class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
+                      class="px-3.5 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 transition-all shadow-sm">
                 +5 pers
               </button>
             </div>
 
-            <!-- Text Ajutător Regulă 30 persoane -->
+            <!-- Text Ajutător Regulă 30 persoane (sub butoane pe telefon) -->
             <span id="txtPersonRuleHint" class="text-xs text-slate-500 font-medium">
               30 persoane incluse în preț
             </span>
