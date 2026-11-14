@@ -1,144 +1,141 @@
 /* ==========================================================================
-   Photos by Dodo - Calculator Majorat
-   Palette: Alb (#ffffff), Gri (#f8fafc / #e2e8f0 / #64748b), Navy Blue (#0f172a / #1e3a8a)
+   Photos by Dodo — Editorial Minimalist Theme
+   Designed for high-end photography services
    ========================================================================== */
 
-/* Typography & Reset */
-body {
-  -webkit-tap-highlight-color: transparent;
-  transition: background-color 0.25s ease, color 0.25s ease;
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
-/* Custom Select Dropdown Styling */
+body {
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom Select with subtle bespoke arrow */
 .custom-select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
-  background-size: 1rem 1rem;
+  background-size: 1.1rem 1.1rem;
   padding-right: 2.5rem;
 }
 
 .dark .custom-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9'/%3E%3C/svg%3E");
 }
 
-/* Cross-Browser High-Precision Range Slider */
+/* Ultra-clean Range Slider */
 .custom-range {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 8px;
+  height: 6px;
   border-radius: 9999px;
   background: #e2e8f0;
   outline: none;
   cursor: pointer;
   touch-action: pan-y;
-  margin: 10px 0;
+  margin: 12px 0;
   display: block;
 }
 
 .dark .custom-range {
-  background: #334155;
+  background: #27272a;
 }
 
-/* WebKit Track & Thumb */
-.custom-range::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 8px;
-  border-radius: 9999px;
-  background: transparent;
-}
-
+/* WebKit Slider Thumb */
 .custom-range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #1e3a8a;
-  border: 3px solid #ffffff;
-  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
+  background: #09090b;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   cursor: grab;
-  margin-top: -8px;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  margin-top: -7px;
+  transition: transform 0.1s ease, background-color 0.1s ease;
 }
 
 .dark .custom-range::-webkit-slider-thumb {
-  background: #3b82f6;
-  border-color: #0f172a;
+  background: #fafafa;
+  border-color: #09090b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .custom-range::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-  box-shadow: 0 3px 8px rgba(30, 58, 138, 0.3);
+  transform: scale(1.12);
 }
 
 .custom-range::-webkit-slider-thumb:active {
   cursor: grabbing;
-  transform: scale(1.18);
-  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4);
+  transform: scale(1.2);
 }
 
-/* Firefox Track & Thumb */
+/* Firefox Slider */
 .custom-range::-moz-range-track {
   width: 100%;
-  height: 8px;
+  height: 6px;
   border-radius: 9999px;
   background: #e2e8f0;
 }
 
 .dark .custom-range::-moz-range-track {
-  background: #334155;
+  background: #27272a;
 }
 
 .custom-range::-moz-range-thumb {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #1e3a8a;
-  border: 3px solid #ffffff;
-  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
+  background: #09090b;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   cursor: grab;
-  transition: transform 0.12s ease;
+  transition: transform 0.1s ease;
 }
 
 .dark .custom-range::-moz-range-thumb {
-  background: #3b82f6;
-  border-color: #0f172a;
+  background: #fafafa;
+  border-color: #09090b;
 }
 
-.custom-range::-moz-range-thumb:active {
-  cursor: grabbing;
-  transform: scale(1.18);
-}
-
-/* Focus styles */
-.custom-range:focus-visible {
-  outline: 2px solid #1e3a8a;
-  outline-offset: 4px;
-}
-
-/* Modal lightbox animation */
-#galleryLightbox {
-  transition: opacity 0.2s ease;
-}
-
-/* Leaflet Map Custom Styling */
+/* Leaflet Map in Dark/Light Clean style */
 .leaflet-container {
   font-family: inherit;
   z-index: 10;
+  background: #f4f4f5;
+}
+
+.dark .leaflet-container {
+  background: #18181b;
 }
 
 .dark .leaflet-tile-pane {
-  filter: brightness(0.7) invert(1) contrast(3) hue-rotate(200deg) saturate(0.35);
+  filter: brightness(0.65) invert(1) contrast(2.8) hue-rotate(200deg) saturate(0.2);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+  font-size: 12px;
 }
 
 .dark .leaflet-popup-content-wrapper,
 .dark .leaflet-popup-tip {
-  background: #0f172a;
-  color: #f8fafc;
-  border: 1px solid #334155;
+  background: #18181b;
+  color: #f4f4f5;
+  border: 1px solid #27272a;
+}
+
+/* Smooth Image hover in gallery */
+.gallery-card {
+  will-change: transform;
 }
