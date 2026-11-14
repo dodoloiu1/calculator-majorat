@@ -49,7 +49,7 @@
     </div>
   </header>
 
-  <!-- HERO SECTION: PĂSTRAT EXACT CA ÎNAINTE (FĂRĂ MODIFICĂRI DE CULORI, LAYOUT SAU POZĂ) -->
+  <!-- HERO SECTION: RESTAURAT EXACT DIN PRIMUL REDESIGN (COMMIT 335249a) -->
   <section class="relative w-full min-h-[85vh] sm:min-h-[90vh] border-b border-[#222222] flex flex-col justify-between overflow-hidden bg-[#000]">
     <!-- Background Full Bleed Photo (Hero image priority loading) -->
     <img src="assets/gallery/photo-4.jpg" 
@@ -101,7 +101,7 @@
       <div class="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-[#e8e6e1] bg-[#0a0a0a]">
 
         <!-- Pasul 1: Invitați -->
-        <div class="p-5 sm:p-7 border-b border-[#e8e6e1]">
+        <div class="config-section border-t-0">
           <div class="flex items-baseline justify-between mb-3">
             <span class="text-xs text-[#e8e6e1] font-bold uppercase tracking-wider">INVITAȚI</span>
             <div class="flex items-baseline gap-2">
@@ -130,18 +130,19 @@
         </div>
 
         <!-- Pasul 2: Interval -->
-        <div class="p-5 sm:p-7 border-b border-[#e8e6e1]">
+        <div class="config-section">
           <div class="flex items-baseline justify-between mb-4">
             <span class="text-xs text-[#e8e6e1] font-bold uppercase tracking-wider">INTERVAL</span>
             <span id="txtHoursTotalBadge" class="text-xs font-mono font-bold text-[#c6ff00] uppercase">
-              6 ORE DE EVENIMENT
+              6 ORE DE FOTOGRAFIERE
             </span>
           </div>
 
+          <!-- Cele două select-uri de oră: 2 coloane egale (grid 1fr 1fr, gap 16px), pe mobil 1 coloană -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
               <label for="selectStartHour" class="block text-xs text-[#9a9a94] uppercase mb-1.5 font-mono">ORA DE ÎNCEPUT:</label>
-              <select id="selectStartHour" class="native-input">
+              <select id="selectStartHour">
                 <option value="17">17:00</option>
                 <option value="18">18:00</option>
                 <option value="19">19:00</option>
@@ -154,7 +155,7 @@
 
             <div>
               <label for="selectEndHour" class="block text-xs text-[#9a9a94] uppercase mb-1.5 font-mono">ORA DE FINAL:</label>
-              <select id="selectEndHour" class="native-input">
+              <select id="selectEndHour">
                 <option value="21">21:00</option>
                 <option value="22">22:00</option>
                 <option value="23">23:00</option>
@@ -169,10 +170,10 @@
             </div>
           </div>
 
-          <!-- Selector Data -->
-          <div class="pt-3 border-t border-[#222222] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <span class="text-xs text-[#9a9a94] uppercase font-mono">DATA EVENIMENTULUI (OPȚIONAL):</span>
-            <input type="date" id="inputEventDate" class="native-input sm:w-64">
+          <!-- Data: lățime completă pe rândul ei, aceeași înălțime de 48px -->
+          <div class="pt-3 border-t border-[#222222]">
+            <label for="inputEventDate" class="block text-xs text-[#9a9a94] uppercase mb-1.5 font-mono">DATA EVENIMENTULUI (OPȚIONAL):</label>
+            <input type="date" id="inputEventDate">
           </div>
 
           <div id="alertInvalidInterval" class="hidden mt-3 p-3 border border-red-800 bg-red-950/40 text-red-400 text-xs uppercase font-mono">
@@ -185,7 +186,7 @@
         </div>
 
         <!-- Pasul 3: Locație -->
-        <div class="p-5 sm:p-7 border-b border-[#e8e6e1]">
+        <div class="config-section">
           <div class="flex items-baseline justify-between mb-3">
             <span class="text-xs text-[#e8e6e1] font-bold uppercase tracking-wider">LOCAȚIE</span>
             <span id="txtLocationBadge" class="text-xs font-mono font-bold text-[#c6ff00] uppercase">
@@ -193,57 +194,59 @@
             </span>
           </div>
 
-          <!-- Address Search cu buton lipit -->
-          <div class="flex mb-3">
-            <input type="text" id="inputSearchAddress" placeholder="INTRODU SALA, STRADA SAU LOCALITATEA..." 
-                   class="native-input border-r-0">
+          <!-- Locație: input + buton CAUTĂ pe același rând (grid 1fr auto) -->
+          <div class="search-grid mb-3">
+            <input type="text" id="inputSearchAddress" placeholder="INTRODU SALA, STRADA SAU LOCALITATEA...">
             <button id="btnSearchAddress" type="button" class="btn-search">
               CAUTĂ
             </button>
           </div>
 
-          <!-- Manual Select Zone -->
-          <select id="selectLocationZone" class="native-input mb-4">
+          <!-- Sub ele, select-ul de zonă pe tot rândul -->
+          <select id="selectLocationZone" class="mb-4">
             <option value="city" selected>București (în oraș) — Uber decontat de tine, la final (noaptea)</option>
             <option value="zone1">Zona 1: Ilfov Apropiat (Ghencea, Chiajna, Otopeni, etc.) — +60 LEI</option>
             <option value="zone2">Zona 2: Ilfov Exterior (Domnești, Corbeanca, Snagov, etc.) — +100 LEI</option>
             <option value="zone3">Zona 3: Peste 35 km / În afara Ilfovului — +150 LEI</option>
           </select>
 
-          <!-- Hartă CartoDB Dark Matter -->
-          <div class="relative">
+          <!-- Apoi harta (Container cu înălțime 360px desktop / 280px mobil, border 1px solid var(--line)) -->
+          <div id="mapContainer">
             <div id="map"></div>
-            <!-- Legenda Brutalist Bloc Solid -->
-            <div class="absolute bottom-2 left-2 z-[400] bg-[#0a0a0a] border border-[#e8e6e1] px-3 py-1.5 text-[11px] font-mono uppercase flex gap-4 text-[#e8e6e1]">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#c6ff00] inline-block border border-black"></span> BUCUREȘTI</span>
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-[#e8e6e1] inline-block border border-black"></span> ILFOV</span>
-            </div>
+          </div>
+
+          <!-- Legenda: în afara hărții, sub ea, pe un rând (flex, gap 16px, mono 11px, pătrățele colorate 10x10) -->
+          <div class="mt-3 flex flex-wrap items-center gap-4 text-[11px] font-mono uppercase text-[#e8e6e1]">
+            <span class="flex items-center gap-2">
+              <span class="w-[10px] h-[10px] bg-[#c6ff00] inline-block border border-black"></span>
+              BUCUREȘTI (UBER)
+            </span>
+            <span class="flex items-center gap-2">
+              <span class="w-[10px] h-[10px] bg-[#e8e6e1] inline-block border border-black"></span>
+              JUDEȚUL ILFOV (+60 / +100 LEI)
+            </span>
           </div>
         </div>
 
         <!-- Pasul 4: Extra -->
-        <div class="p-5 sm:p-7">
+        <div class="config-section">
           <span class="text-xs text-[#e8e6e1] font-bold uppercase tracking-wider block mb-3">EXTRA</span>
 
-          <div class="space-y-3">
-            <label class="checkbox-row">
-              <div class="flex items-center gap-3.5">
-                <input type="checkbox" id="chkExpressDelivery" class="native-checkbox">
-                <div>
-                  <div class="text-xs font-bold uppercase text-[#e8e6e1]">PREDARE RAPIDĂ (24-48 ORE)</div>
-                  <div class="text-xs text-[#9a9a94] uppercase">TOATE CADRELE EDITATE COMPLETE ÎN MAXIM 2 ZILE</div>
-                </div>
+          <div>
+            <label class="checkbox-option">
+              <input type="checkbox" id="chkExpressDelivery" class="native-checkbox">
+              <div>
+                <div class="text-xs font-bold uppercase text-[#e8e6e1]">PREDARE RAPIDĂ (24-48 ORE)</div>
+                <div class="text-xs text-[#9a9a94] uppercase">TOATE CADRELE EDITATE COMPLETE ÎN MAXIM 2 ZILE</div>
               </div>
               <span class="font-mono text-xs font-bold text-[#c6ff00]">+200 LEI</span>
             </label>
 
-            <label class="checkbox-row">
-              <div class="flex items-center gap-3.5">
-                <input type="checkbox" id="chkPreSession" class="native-checkbox">
-                <div>
-                  <div class="text-xs font-bold uppercase text-[#e8e6e1]">MINI-ȘEDINȚĂ PORTRET ÎNAINTE DE PETRECERE</div>
-                  <div class="text-xs text-[#9a9a94] uppercase">SESIUNE DEDICATĂ CU SĂRBĂTORITUL/A (~45 MIN)</div>
-                </div>
+            <label class="checkbox-option">
+              <input type="checkbox" id="chkPreSession" class="native-checkbox">
+              <div>
+                <div class="text-xs font-bold uppercase text-[#e8e6e1]">MINI-ȘEDINȚĂ PORTRET ÎNAINTE DE PETRECERE</div>
+                <div class="text-xs text-[#9a9a94] uppercase">SESIUNE DEDICATĂ CU SĂRBĂTORITUL/A (~45 MIN)</div>
               </div>
               <span class="font-mono text-xs font-bold text-[#c6ff00]">+150 LEI</span>
             </label>
@@ -253,7 +256,7 @@
       </div>
 
       <!-- DREAPTA: PANOUL DE PREȚ (5 coloane Sticky) -->
-      <div class="lg:col-span-5 bg-[#0a0a0a] lg:sticky lg:top-4 p-6 sm:p-8 flex flex-col justify-between self-start border-b lg:border-b-0 border-[#e8e6e1]">
+      <div class="lg:col-span-5 bg-[#0a0a0a] self-start border-b lg:border-b-0 border-[#e8e6e1] price-panel">
         <div>
           <span class="text-xs text-[#9a9a94] uppercase tracking-widest block mb-2">CALCUL ESTIMATIV</span>
           
@@ -302,16 +305,16 @@
           </div>
         </div>
 
-        <!-- Action CTAs -->
-        <div class="space-y-3 pt-6 border-t border-[#222222]">
+        <!-- Butoane STACKED, full width, unul sub altul, gap 8px -->
+        <div class="space-y-2 pt-6 border-t border-[#222222]">
           <a id="btnSendWhatsapp" href="https://wa.me/40736195520" target="_blank" rel="noopener noreferrer" 
-             class="btn-action-primary">
+             class="btn-whatsapp-stacked">
             <span>TRIMITE PE WHATSAPP</span>
             <span>&rarr;</span>
           </a>
 
           <button id="btnCopyText" type="button" 
-                  class="btn-action-secondary">
+                  class="btn-copy-stacked">
             <span>COPIAZĂ CALCULUL</span>
           </button>
         </div>
@@ -328,46 +331,46 @@
       <span class="text-xs text-[#9a9a94] uppercase font-mono">ARHIVĂ CADRE // 2026</span>
     </div>
 
-    <!-- Brutalist Dense Gallery Grid -->
-    <div class="brutalist-gallery">
-      <!-- Img 1: Portrait (width: 1067, height: 1600) -->
-      <figure class="brutalist-figure portrait gallery-item" data-index="0" data-src="assets/gallery/photo-1.jpg">
-        <img src="assets/gallery/photo-1.jpg" alt="Foto Majorat 1" loading="lazy" decoding="async" width="1067" height="1600" class="brutalist-img">
+    <!-- Galerie: .gallery cu <figure><img></figure> fără wrapper în plus -->
+    <div class="gallery">
+      <!-- Img 1: Portrait (1067x1600) -->
+      <figure class="gallery-item portrait" data-index="0">
+        <img src="assets/gallery/photo-1.jpg" alt="Foto Majorat 1" loading="lazy" decoding="async" width="1067" height="1600">
       </figure>
 
-      <!-- Img 4: Landscape (width: 1600, height: 1067) -->
-      <figure class="brutalist-figure landscape gallery-item" data-index="3" data-src="assets/gallery/photo-4.jpg">
-        <img src="assets/gallery/photo-4.jpg" alt="Foto Majorat 4" loading="lazy" decoding="async" width="1600" height="1067" class="brutalist-img">
+      <!-- Img 4: Landscape (1600x1067) -->
+      <figure class="gallery-item landscape" data-index="3">
+        <img src="assets/gallery/photo-4.jpg" alt="Foto Majorat 4" loading="lazy" decoding="async" width="1600" height="1067">
       </figure>
 
-      <!-- Img 2: Portrait (width: 1067, height: 1600) -->
-      <figure class="brutalist-figure portrait gallery-item" data-index="1" data-src="assets/gallery/photo-2.jpg">
-        <img src="assets/gallery/photo-2.jpg" alt="Foto Majorat 2" loading="lazy" decoding="async" width="1067" height="1600" class="brutalist-img">
+      <!-- Img 2: Portrait (1067x1600) -->
+      <figure class="gallery-item portrait" data-index="1">
+        <img src="assets/gallery/photo-2.jpg" alt="Foto Majorat 2" loading="lazy" decoding="async" width="1067" height="1600">
       </figure>
 
-      <!-- Img 3: Portrait (width: 1067, height: 1600) -->
-      <figure class="brutalist-figure portrait gallery-item" data-index="2" data-src="assets/gallery/photo-3.jpg">
-        <img src="assets/gallery/photo-3.jpg" alt="Foto Majorat 3" loading="lazy" decoding="async" width="1067" height="1600" class="brutalist-img">
+      <!-- Img 3: Portrait (1067x1600) -->
+      <figure class="gallery-item portrait" data-index="2">
+        <img src="assets/gallery/photo-3.jpg" alt="Foto Majorat 3" loading="lazy" decoding="async" width="1067" height="1600">
       </figure>
 
-      <!-- Img 7: Landscape (width: 1600, height: 1067) -->
-      <figure class="brutalist-figure landscape gallery-item" data-index="6" data-src="assets/gallery/photo-7.jpg">
-        <img src="assets/gallery/photo-7.jpg" alt="Foto Majorat 7" loading="lazy" decoding="async" width="1600" height="1067" class="brutalist-img">
+      <!-- Img 7: Landscape (1600x1067) -->
+      <figure class="gallery-item landscape" data-index="6">
+        <img src="assets/gallery/photo-7.jpg" alt="Foto Majorat 7" loading="lazy" decoding="async" width="1600" height="1067">
       </figure>
 
-      <!-- Img 5: Portrait (width: 1067, height: 1600) -->
-      <figure class="brutalist-figure portrait gallery-item" data-index="4" data-src="assets/gallery/photo-5.jpg">
-        <img src="assets/gallery/photo-5.jpg" alt="Foto Majorat 5" loading="lazy" decoding="async" width="1067" height="1600" class="brutalist-img">
+      <!-- Img 5: Portrait (1067x1600) -->
+      <figure class="gallery-item portrait" data-index="4">
+        <img src="assets/gallery/photo-5.jpg" alt="Foto Majorat 5" loading="lazy" decoding="async" width="1067" height="1600">
       </figure>
 
-      <!-- Img 8: Landscape (width: 1600, height: 1067) -->
-      <figure class="brutalist-figure landscape gallery-item" data-index="7" data-src="assets/gallery/photo-8.jpg">
-        <img src="assets/gallery/photo-8.jpg" alt="Foto Majorat 8" loading="lazy" decoding="async" width="1600" height="1067" class="brutalist-img">
+      <!-- Img 8: Landscape (1600x1067) -->
+      <figure class="gallery-item landscape" data-index="7">
+        <img src="assets/gallery/photo-8.jpg" alt="Foto Majorat 8" loading="lazy" decoding="async" width="1600" height="1067">
       </figure>
 
-      <!-- Img 6: Portrait (width: 1067, height: 1600) -->
-      <figure class="brutalist-figure portrait gallery-item" data-index="5" data-src="assets/gallery/photo-6.jpg">
-        <img src="assets/gallery/photo-6.jpg" alt="Foto Majorat 6" loading="lazy" decoding="async" width="1067" height="1600" class="brutalist-img">
+      <!-- Img 6: Portrait (1067x1600) -->
+      <figure class="gallery-item portrait" data-index="5">
+        <img src="assets/gallery/photo-6.jpg" alt="Foto Majorat 6" loading="lazy" decoding="async" width="1067" height="1600">
       </figure>
     </div>
   </section>
@@ -404,7 +407,7 @@
   </div>
 
   <!-- STICKY MOBILE BOTTOM BAR (Solid Black, Border Top, Safe Area Bottom) -->
-  <aside class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#0a0a0a] border-t border-[#e8e6e1] px-4 py-3 flex items-center justify-between" style="padding-bottom: calc(0.75rem + var(--safe-bottom));">
+  <aside class="mobile-sticky-bar">
     <div>
       <div class="text-[10px] text-[#9a9a94] uppercase font-mono">TOTAL ESTIMAT:</div>
       <div class="font-mono text-xl font-bold text-[#c6ff00] leading-none">
@@ -412,7 +415,7 @@
       </div>
     </div>
     <a id="btnMobileWhatsapp" href="https://wa.me/40736195520" target="_blank" rel="noopener noreferrer" 
-       class="btn-action-primary text-xs py-2.5 px-4 uppercase font-bold shrink-0 w-auto h-auto">
+       class="btn-whatsapp-stacked text-xs py-2 px-4 uppercase font-bold shrink-0 w-auto h-auto">
       TRIMITE PE WHATSAPP &rarr;
     </a>
   </aside>

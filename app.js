@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elMobileTotal) elMobileTotal.textContent = total.toLocaleString('ro-RO');
 
     // Update Badge
-    elHoursTotalBadge.textContent = `${ORE} ORE DE EVENIMENT`;
+    elHoursTotalBadge.textContent = `${ORE} ORE DE FOTOGRAFIERE`;
 
     // Update Breakdown
     elLblHoursExtra.textContent = `ORE SUPLIMENTARE (${extraHours} × 80 LEI):`;
@@ -197,7 +197,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Guests handling with step 5
+  // Guests handling with step 5 & Slider percentage tracking
+  function updateSliderFill(el) {
+    if (!el) return;
+    const min = parseFloat(el.min) || 15;
+    const max = parseFloat(el.max) || 120;
+    const val = parseFloat(el.value) || 30;
+    const pct = ((val - min) / (max - min)) * 100;
+    el.style.setProperty('--pct', `${pct}%`);
+  }
+
   function setGuests(val) {
     let g = parseInt(val, 10);
     g = Math.round(g / 5) * 5;
@@ -207,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     state.guests = g;
     elGuestsSlider.value = g;
     elGuestsDisplay.textContent = g;
+    updateSliderFill(elGuestsSlider);
 
     calculate();
   }
@@ -372,6 +382,14 @@ document.addEventListener('DOMContentLoaded', () => {
     map.on('click', (e) => {
       handleLocationSelected(e.latlng.lat, e.latlng.lng, 'LOCAȚIE SELECTATĂ PE HARTĂ');
     });
+
+    // Invalidate size in multiple passes to guarantee render
+    setTimeout(() => {
+      if (map) map.invalidateSize();
+    }, 200);
+    setTimeout(() => {
+      if (map) map.invalidateSize();
+    }, 1000);
   }
 
   // Search Address
@@ -418,30 +436,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- DYNAMIC RATIO DETECTION & ASYMMETRIC GRID SPANS ---
-  // Detects actual natural dimensions to ensure landscape=col-span 2, portrait=row-span 2
-  const figures = document.querySelectorAll('.brutalist-figure');
-  figures.forEach(fig => {
-    const img = fig.querySelector('img');
-    if (!img) return;
+  function initGalleryRatio() {
+    const figures = document.querySelectorAll('.gallery figure');
+    figures.forEach(fig => {
+      const img = fig.querySelector('img');
+      if (!img) return;
 
-    function applySpan() {
-      if (img.naturalWidth && img.naturalHeight) {
-        if (img.naturalWidth > img.naturalHeight) {
-          fig.classList.remove('portrait');
-          fig.classList.add('landscape');
-        } else {
-          fig.classList.remove('landscape');
-          fig.classList.add('portrait');
+      function checkRatio() {
+        if (img.naturalWidth && img.naturalHeight) {
+          if (img.naturalWidth > img.naturalHeight) {
+            fig.classList.remove('portrait');
+            fig.classList.add('landscape');
+          } else {
+            fig.classList.remove('landscape');
+            fig.classList.add('portrait');
+          }
         }
       }
-    }
 
-    if (img.complete) {
-      applySpan();
-    } else {
-      img.addEventListener('load', applySpan, { once: true });
-    }
-  });
+      if (img.complete) {
+        checkRatio();
+      } else {
+        img.addEventListener('load', checkRatio, { once: true });
+      }
+    });
+  }
 
   // --- ADVANCED LIGHTBOX SYSTEM ---
   const GALLERY_IMAGES = [
@@ -508,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLightboxView();
   }
 
-  document.querySelectorAll('.gallery-item').forEach(item => {
+  document.querySelectorAll('.gallery figure').forEach(item => {
     item.addEventListener('click', () => {
       const idx = item.getAttribute('data-index');
       openLightbox(idx);
@@ -547,6 +566,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // INITIAL RUN
+  updateSliderFill(elGuestsSlider);
   calculate();
   initMap();
+  initGalleryRatio();
 });
