@@ -7,6 +7,64 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Dark Mode Handler ---
+  const elBtnThemeToggle = document.getElementById('btnThemeToggle');
+  
+  if (elBtnThemeToggle) {
+    elBtnThemeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateSliderFill(elGuestsSlider);
+    });
+  }
+
+  // --- Lightbox Galerie ---
+  const elLightbox = document.getElementById('galleryLightbox');
+  const elLightboxImg = document.getElementById('lightboxImage');
+  const elBtnCloseLightbox = document.getElementById('btnCloseLightbox');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  function openLightbox(src) {
+    if (!elLightbox || !elLightboxImg) return;
+    elLightboxImg.src = src;
+    elLightbox.classList.remove('hidden');
+    requestAnimationFrame(() => {
+      elLightbox.classList.remove('opacity-0');
+      elLightbox.classList.add('opacity-100');
+    });
+  }
+
+  function closeLightbox() {
+    if (!elLightbox) return;
+    elLightbox.classList.remove('opacity-100');
+    elLightbox.classList.add('opacity-0');
+    setTimeout(() => {
+      elLightbox.classList.add('hidden');
+      if (elLightboxImg) elLightboxImg.src = '';
+    }, 200);
+  }
+
+  galleryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const src = item.getAttribute('data-src');
+      if (src) openLightbox(src);
+    });
+  });
+
+  if (elBtnCloseLightbox) {
+    elBtnCloseLightbox.addEventListener('click', closeLightbox);
+  }
+  if (elLightbox) {
+    elLightbox.addEventListener('click', (e) => {
+      if (e.target === elLightbox) closeLightbox();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && elLightbox && !elLightbox.classList.contains('hidden')) {
+      closeLightbox();
+    }
+  });
+
   // --- DOM Elements ---
   const elEventDate = document.getElementById('inputEventDate');
   const elGuestsSlider = document.getElementById('inputGuestsSlider');
@@ -70,11 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Update dynamic colored track on range input
   function updateSliderFill(el) {
     if (!el) return;
+    const isDark = document.documentElement.classList.contains('dark');
     const min = parseFloat(el.min) || 15;
     const max = parseFloat(el.max) || 120;
     const val = parseFloat(el.value) || 30;
     const percentage = ((val - min) / (max - min)) * 100;
-    el.style.background = `linear-gradient(to right, #1e3a8a 0%, #1e3a8a ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`;
+    
+    const activeColor = isDark ? '#3b82f6' : '#1e3a8a';
+    const trackColor = isDark ? '#334155' : '#e2e8f0';
+    
+    el.style.background = `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${percentage}%, ${trackColor} ${percentage}%, ${trackColor} 100%)`;
   }
 
   // Generate readable summary text

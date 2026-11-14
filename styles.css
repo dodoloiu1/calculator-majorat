@@ -5,9 +5,8 @@
 
 /* Typography & Reset */
 body {
-  background-color: #ffffff;
-  color: #0f172a;
   -webkit-tap-highlight-color: transparent;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* Custom Select Dropdown Styling */
@@ -20,6 +19,10 @@ body {
   background-position: right 0.75rem center;
   background-size: 1rem 1rem;
   padding-right: 2.5rem;
+}
+
+.dark .custom-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
 }
 
 /* Cross-Browser High-Precision Range Slider */
@@ -35,6 +38,10 @@ body {
   touch-action: pan-y;
   margin: 10px 0;
   display: block;
+}
+
+.dark .custom-range {
+  background: #334155;
 }
 
 /* WebKit Track & Thumb */
@@ -55,8 +62,13 @@ body {
   border: 3px solid #ffffff;
   box-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
   cursor: grab;
-  margin-top: -8px; /* Perfectly centers 24px thumb on 8px track */
+  margin-top: -8px;
   transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.dark .custom-range::-webkit-slider-thumb {
+  background: #3b82f6;
+  border-color: #0f172a;
 }
 
 .custom-range::-webkit-slider-thumb:hover {
@@ -78,6 +90,10 @@ body {
   background: #e2e8f0;
 }
 
+.dark .custom-range::-moz-range-track {
+  background: #334155;
+}
+
 .custom-range::-moz-range-thumb {
   width: 24px;
   height: 24px;
@@ -89,6 +105,11 @@ body {
   transition: transform 0.12s ease;
 }
 
+.dark .custom-range::-moz-range-thumb {
+  background: #3b82f6;
+  border-color: #0f172a;
+}
+
 .custom-range::-moz-range-thumb:active {
   cursor: grabbing;
   transform: scale(1.18);
@@ -98,4 +119,9 @@ body {
 .custom-range:focus-visible {
   outline: 2px solid #1e3a8a;
   outline-offset: 4px;
+}
+
+/* Modal lightbox animation */
+#galleryLightbox {
+  transition: opacity 0.2s ease;
 }
