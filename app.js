@@ -3,7 +3,7 @@
  * https://www.instagram.com/photosby_dodo/
  *
  * FORMULA:
- * PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT + OPȚIUNI
+ * PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + DEPLASARE + OPȚIUNI
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -78,7 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const elHoursTotalBadge = document.getElementById('txtHoursTotalBadge');
   const elAlertInvalidInterval = document.getElementById('alertInvalidInterval');
 
-  const elInputTransport = document.getElementById('inputTransport');
+  // Location & Map Elements
+  const elSelectLocationZone = document.getElementById('selectLocationZone');
+  const elInputSearchAddress = document.getElementById('inputSearchAddress');
+  const elBtnSearchAddress = document.getElementById('btnSearchAddress');
+  const elLocationBadge = document.getElementById('txtLocationBadge');
 
   // Addons
   const elChkExpress = document.getElementById('chkExpressDelivery');
@@ -90,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const elValHoursExtra = document.getElementById('valHoursExtraFormula');
   const elLblGuestsExtra = document.getElementById('lblGuestsExtraFormula');
   const elValGuestsExtra = document.getElementById('valGuestsExtraFormula');
-  const elRowTransport = document.getElementById('rowTransportSummary');
+  const elLblTransport = document.getElementById('lblTransportSummary');
   const elValTransport = document.getElementById('valTransportFormula');
   const elRowAddons = document.getElementById('rowAddonsSummary');
   const elValAddons = document.getElementById('valAddonsFormula');
@@ -105,11 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
     guests: 30,
     startHour: 20,
     endHour: 2,
-    transport: 0,
+    locationZone: 'city', // 'city', 'zone1', 'zone2', 'zone3'
+    locationName: 'București (în oraș)',
+    transportCost: 30, // 30 lei in oras pentru Uber de noapte acasa
     addons: {
       express: false, // 200 lei
       preSession: false // 150 lei
     }
+  };
+
+  const ZONE_CONFIG = {
+    city: { cost: 30, label: 'În oraș (+30 lei Uber noapte)', desc: 'București (în oraș)' },
+    zone1: { cost: 60, label: 'Zona 1: Ilfov Apropiat (+60 lei)', desc: 'Zona 1: Ilfov Apropiat (Ghencea, Chiajna, Otopeni, etc.)' },
+    zone2: { cost: 100, label: 'Zona 2: Ilfov Exterior (+100 lei)', desc: 'Zona 2: Ilfov Exterior (Domnești, Corbeanca, Snagov, etc.)' },
+    zone3: { cost: 150, label: 'Zona 3: Peste 35 km (+150 lei)', desc: 'Zona 3: Peste 35 km / În afara Ilfovului' }
   };
 
   // Helper to compute duration across midnight safely
@@ -117,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let s = parseInt(start, 10);
     let e = parseInt(end, 10);
     if (s === e) {
-      return 0; // Invalid / 0 hours
+      return 0;
     }
     if (e < s) {
       return (e + 24) - s;
@@ -157,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `• Număr persoane: ${state.guests} invitați\n` +
       `• Interval fotografiere: ${startFormatted} - ${endFormatted} (${ORE} ore)\n` +
       `• Sosire: cu 30 min înainte de ${startFormatted} pentru echipament\n` +
-      (state.transport > 0 ? `• Cost transport: ${state.transport} lei\n` : '') +
+      `• Locație / Zonă: ${state.locationName} (${state.transportCost} lei)\n` +
       (activeAddons.length > 0 ? `• Opțiuni suplimentare: ${activeAddons.join(', ')}\n` : '') +
       `• PREȚ TOTAL: ${total} LEI\n` +
       `-----------------------------------------\n` +
@@ -179,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const PERSOANE = state.guests;
-    const TRANSPORT = Math.max(0, parseInt(state.transport, 10) || 0);
+    const TRANSPORT = state.transportCost;
 
     const baseCost = 200; // prima oră
     const extraHours = Math.max(0, ORE - 1);
@@ -214,11 +227,14 @@ document.addEventListener('DOMContentLoaded', () => {
       elPersonRuleHint.textContent = `30 persoane incluse în preț`;
     }
 
-    if (TRANSPORT > 0) {
-      elRowTransport.classList.remove('hidden');
+    // Transport row
+    if (elValTransport) {
       elValTransport.textContent = `${TRANSPORT} lei`;
-    } else {
-      elRowTransport.classList.add('hidden');
+    }
+    if (elLblTransport) {
+      elLblTransport.textContent = state.locationZone === 'city'
+        ? '• Uber noapte acasă (în oraș):'
+        : `• Deplasare ${state.locationName}:`;
     }
 
     if (addonsCost > 0) {
@@ -233,6 +249,38 @@ document.addEventListener('DOMContentLoaded', () => {
       const summary = generateSummaryText();
       elBtnWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
     }
+  }
+
+  // --- Set Zone Logic ---
+  function setZone(zoneKey, customLocationName) {
+    if (!ZONE_CONFIG[zoneKey]) zoneKey = 'city';
+    state.locationZone = zoneKey;
+    state.transportCost = ZONE_CONFIG[zoneKey].cost;
+    state.locationName = customLocationName || ZONE_CONFIG[zoneKey].desc;
+
+    if (elSelectLocationZone) {
+      elSelectLocationZone.value = zoneKey;
+    }
+    if (elLocationBadge) {
+      elLocationBadge.textContent = ZONE_CONFIG[zoneKey].label;
+      if (zoneKey === 'city') {
+        elLocationBadge.className = 'text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 rounded border border-emerald-200 dark:border-emerald-900';
+      } else if (zoneKey === 'zone1') {
+        elLocationBadge.className = 'text-xs font-mono font-bold text-amber-600 dark:text-amber-400 px-2 py-0.5 bg-amber-50 dark:bg-amber-950/40 rounded border border-amber-200 dark:border-amber-900';
+      } else if (zoneKey === 'zone2') {
+        elLocationBadge.className = 'text-xs font-mono font-bold text-orange-600 dark:text-orange-400 px-2 py-0.5 bg-orange-50 dark:bg-orange-950/40 rounded border border-orange-200 dark:border-orange-900';
+      } else {
+        elLocationBadge.className = 'text-xs font-mono font-bold text-rose-600 dark:text-rose-400 px-2 py-0.5 bg-rose-50 dark:bg-rose-950/40 rounded border border-rose-200 dark:border-rose-900';
+      }
+    }
+
+    calculate();
+  }
+
+  if (elSelectLocationZone) {
+    elSelectLocationZone.addEventListener('change', (e) => {
+      setZone(e.target.value);
+    });
   }
 
   // Set guests with step 5
@@ -281,11 +329,6 @@ document.addEventListener('DOMContentLoaded', () => {
   elSelectStart.addEventListener('change', onDropdownChange);
   elSelectEnd.addEventListener('change', onDropdownChange);
 
-  elInputTransport.addEventListener('input', (e) => {
-    state.transport = parseInt(e.target.value, 10) || 0;
-    calculate();
-  });
-
   // Addons Checkbox Events
   if (elChkExpress) {
     elChkExpress.addEventListener('change', (e) => {
@@ -317,7 +360,177 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- Leaflet Map Integration ---
+  const CENTER_BUCHAREST = [44.4323, 26.1063]; // Piata Unirii
+  let map = null;
+  let clientMarker = null;
+
+  function initMap() {
+    const elMap = document.getElementById('map');
+    if (!elMap || typeof L === 'undefined') return;
+
+    map = L.map('map', {
+      center: CENTER_BUCHAREST,
+      zoom: 10,
+      zoomControl: true,
+      scrollWheelZoom: false
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+      maxZoom: 18
+    }).addTo(map);
+
+    // Zone 3: Peste 35 km (> 23000m raza)
+    const circleZ3 = L.circle(CENTER_BUCHAREST, {
+      radius: 35000,
+      color: '#f43f5e',
+      fillColor: '#f43f5e',
+      fillOpacity: 0.08,
+      weight: 1.5,
+      dashArray: '4, 4'
+    }).addTo(map);
+    circleZ3.bindTooltip('Zona 3: Peste 35 km (+150 lei)', { sticky: true });
+
+    // Zone 2: Ilfov Exterior (14000m - 23000m)
+    const circleZ2 = L.circle(CENTER_BUCHAREST, {
+      radius: 23000,
+      color: '#f97316',
+      fillColor: '#f97316',
+      fillOpacity: 0.12,
+      weight: 1.5
+    }).addTo(map);
+    circleZ2.bindTooltip('Zona 2: Ilfov Exterior (+100 lei)', { sticky: true });
+
+    // Zone 1: Ilfov Apropiat (8500m - 14000m)
+    const circleZ1 = L.circle(CENTER_BUCHAREST, {
+      radius: 14000,
+      color: '#f59e0b',
+      fillColor: '#f59e0b',
+      fillOpacity: 0.15,
+      weight: 2
+    }).addTo(map);
+    circleZ1.bindTooltip('Zona 1: Ilfov Apropiat (+60 lei)', { sticky: true });
+
+    // Zone 0: Bucuresti in oras (0 - 8500m raza medie)
+    const circleCity = L.circle(CENTER_BUCHAREST, {
+      radius: 8500,
+      color: '#10b981',
+      fillColor: '#10b981',
+      fillOpacity: 0.22,
+      weight: 2
+    }).addTo(map);
+    circleCity.bindTooltip('București în oraș (+30 lei Uber)', { sticky: true });
+
+    // Center Reference Marker (Piața Unirii)
+    L.circleMarker(CENTER_BUCHAREST, {
+      radius: 6,
+      color: '#1e3a8a',
+      fillColor: '#ffffff',
+      fillOpacity: 1,
+      weight: 3
+    }).addTo(map).bindPopup('<b>București Centru</b>');
+
+    // Click on map to place marker
+    map.on('click', (e) => {
+      handleLocationSelected(e.latlng.lat, e.latlng.lng, 'Locație selectată pe hartă');
+    });
+  }
+
+  // Calculate Distance & Determine Zone
+  function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth radius in km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function handleLocationSelected(lat, lon, label) {
+    const distKm = calculateDistanceKm(CENTER_BUCHAREST[0], CENTER_BUCHAREST[1], lat, lon);
+    
+    let detectedZone = 'city';
+    if (distKm > 25) {
+      detectedZone = 'zone3';
+    } else if (distKm > 14) {
+      detectedZone = 'zone2';
+    } else if (distKm > 8.5) {
+      detectedZone = 'zone1';
+    } else {
+      detectedZone = 'city';
+    }
+
+    setZone(detectedZone, `${label} (~${Math.round(distKm)} km)`);
+
+    if (map) {
+      if (clientMarker) {
+        clientMarker.setLatLng([lat, lon]);
+      } else {
+        clientMarker = L.marker([lat, lon], {
+          icon: L.icon({
+            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41]
+          })
+        }).addTo(map);
+      }
+      clientMarker.bindPopup(`<b>${label}</b><br>Distanță: ~${distKm.toFixed(1)} km<br>Zonă: ${ZONE_CONFIG[detectedZone].label}`).openPopup();
+      map.setView([lat, lon], 12);
+    }
+  }
+
+  // Search Address via Nominatim Geocoding
+  async function searchAddress() {
+    const query = elInputSearchAddress ? elInputSearchAddress.value.trim() : '';
+    if (!query) return;
+
+    if (elBtnSearchAddress) {
+      elBtnSearchAddress.textContent = 'Caut...';
+      elBtnSearchAddress.disabled = true;
+    }
+
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&q=${encodeURIComponent(query + ' Romania')}`);
+      const data = await response.json();
+
+      if (data && data.length > 0) {
+        const place = data[0];
+        const lat = parseFloat(place.lat);
+        const lon = parseFloat(place.lon);
+        const shortName = place.display_name.split(',').slice(0, 2).join(',');
+        handleLocationSelected(lat, lon, shortName);
+      } else {
+        alert('Nu am găsit adresa exactă. Te rugăm să selectezi zona direct din listă sau fă click pe hartă.');
+      }
+    } catch (err) {
+      console.error('Eroare geocoding:', err);
+      alert('Eroare la căutarea adresei. Te rugăm să selectezi zona din listă.');
+    } finally {
+      if (elBtnSearchAddress) {
+        elBtnSearchAddress.textContent = 'Localizează';
+        elBtnSearchAddress.disabled = false;
+      }
+    }
+  }
+
+  if (elBtnSearchAddress) {
+    elBtnSearchAddress.addEventListener('click', searchAddress);
+  }
+  if (elInputSearchAddress) {
+    elInputSearchAddress.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        searchAddress();
+      }
+    });
+  }
+
   // Initial setup
   updateSliderFill(elGuestsSlider);
   calculate();
+  initMap();
 });

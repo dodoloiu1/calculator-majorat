@@ -125,3 +125,20 @@ body {
 #galleryLightbox {
   transition: opacity 0.2s ease;
 }
+
+/* Leaflet Map Custom Styling */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 10;
+}
+
+.dark .leaflet-tile-pane {
+  filter: brightness(0.7) invert(1) contrast(3) hue-rotate(200deg) saturate(0.35);
+}
+
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #334155;
+}
