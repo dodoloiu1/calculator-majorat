@@ -4,10 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculator Servicii Foto Majorat | Photos by Dodo</title>
-  <meta name="description" content="Calculator minimalist pentru tarife foto majorat - Photos by Dodo (@photosby_dodo).">
+  <meta name="description" content="Calculator minimalist și transparent pentru tarife foto majorat - Photos by Dodo (@photosby_dodo).">
+
+  <!-- Open Graph / Meta Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dodoloiu1.github.io/calculator-majorat/">
+  <meta property="og:title" content="Calculator Servicii Foto Majorat | Photos by Dodo">
+  <meta property="og:description" content="Calculează pe loc costul serviciilor foto pentru petrecerea ta de 18 ani. Fără costuri ascunse.">
+  <meta property="og:image" content="https://dodoloiu1.github.io/calculator-majorat/og-image.svg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Calculator Foto Majorat • Photos by Dodo">
+  <meta name="twitter:description" content="Află instant prețul serviciilor foto pentru majoratul tău.">
   
   <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📸</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📸</text></svg>">
 
   <!-- Inter & JetBrains Mono Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,7 +59,7 @@
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-navy-700 selection:text-white">
 
-  <!-- Header Minimalist (Alb, Chenar Gri, Text Navy) -->
+  <!-- Header Minimalist -->
   <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -75,7 +86,7 @@
   <!-- Main Content -->
   <main class="max-w-2xl mx-auto px-4 py-8 sm:py-10 w-full flex-1">
 
-    <!-- Card Principal (Alb, Chenar Gri) -->
+    <!-- Card Principal -->
     <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
       
       <!-- Titlu & Subtitlu -->
@@ -86,8 +97,20 @@
         </p>
       </div>
 
-      <!-- Secțiunea 1: Număr Persoane (Slider funcțional + Pas de 5) -->
+      <!-- Secțiunea 0: Data Evenimentului -->
       <div class="mb-8">
+        <label for="inputEventDate" class="text-xs sm:text-sm font-bold text-navy-900 uppercase tracking-wide block mb-1.5">
+          Data Evenimentului (Opțional)
+        </label>
+        <div class="flex items-center gap-3">
+          <input type="date" id="inputEventDate"
+                 class="w-full sm:w-auto px-3.5 py-2 text-sm bg-white border border-slate-300 rounded-xl text-navy-900 font-mono focus:border-navy-700 focus:outline-none transition-colors shadow-sm">
+          <span class="text-xs text-slate-400">Pentru verificarea disponibilității</span>
+        </div>
+      </div>
+
+      <!-- Secțiunea 1: Număr Persoane (Slider + Pas de 5) -->
+      <div class="mb-8 pt-6 border-t border-slate-100">
         <div class="flex items-center justify-between mb-2">
           <label for="inputGuestsSlider" class="text-xs sm:text-sm font-bold text-navy-900 uppercase tracking-wide">
             Număr de persoane
@@ -105,7 +128,6 @@
           <input type="range" id="inputGuestsSlider" min="15" max="120" step="5" value="30" class="custom-range">
           
           <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 pt-1">
-            <!-- Butoane Step -5 / +5 (lungi cat slider-ul pe telefon, compacte pe laptop) -->
             <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full sm:w-auto">
               <button id="btnMinus5" type="button" 
                       class="w-full sm:w-auto py-2 sm:py-1.5 px-3.5 text-xs font-semibold rounded-lg border border-slate-300 bg-white hover:bg-slate-100 active:scale-95 text-navy-900 text-center transition-all shadow-sm">
@@ -117,7 +139,7 @@
               </button>
             </div>
 
-            <!-- Text Ajutător Regulă 30 persoane (sub butoane pe telefon) -->
+            <!-- Text Ajutător Regulă 30 persoane -->
             <span id="txtPersonRuleHint" class="text-xs text-slate-500 font-medium">
               30 persoane incluse în preț
             </span>
@@ -125,7 +147,7 @@
         </div>
       </div>
 
-      <!-- Secțiunea 2: Interval Orar (Strict Select din Listă) -->
+      <!-- Secțiunea 2: Interval Orar -->
       <div class="mb-8 pt-6 border-t border-slate-100">
         <div class="flex items-center justify-between mb-3">
           <span class="text-xs sm:text-sm font-bold text-navy-900 uppercase tracking-wide">
@@ -136,7 +158,7 @@
           </span>
         </div>
 
-        <!-- Dropdowns Grid (Doar select din listă) -->
+        <!-- Dropdowns Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           <!-- Ora Inceput -->
           <div>
@@ -162,6 +184,7 @@
             </label>
             <select id="selectEndHour" 
                     class="custom-select w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl text-navy-900 font-mono font-medium focus:border-navy-700 focus:outline-none transition-colors shadow-sm cursor-pointer">
+              <option value="21">21:00</option>
               <option value="22">22:00</option>
               <option value="23">23:00</option>
               <option value="0">00:00 (Miezul nopții)</option>
@@ -174,6 +197,11 @@
               <option value="7">07:00 (Dimineața)</option>
             </select>
           </div>
+        </div>
+
+        <!-- Warning interval invalid -->
+        <div id="alertInvalidInterval" class="hidden mb-3 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl flex items-center gap-2">
+          <span>⚠️ Ora de început și ora de final nu pot fi identice. Selectează un interval valid.</span>
         </div>
 
         <!-- Notă Specificată: Sosire cu 30 min mai devreme -->
@@ -205,6 +233,36 @@
         </div>
       </div>
 
+      <!-- Secțiunea 4: Servicii Opționale (Add-ons) -->
+      <div class="mb-8 pt-6 border-t border-slate-100">
+        <span class="text-xs sm:text-sm font-bold text-navy-900 uppercase tracking-wide block mb-3">
+          Opțiuni Suplimentare (Opțional)
+        </span>
+        <div class="space-y-2.5">
+          <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="chkExpressDelivery" class="w-4 h-4 text-navy-700 rounded border-slate-300 focus:ring-navy-700">
+              <div>
+                <div class="text-xs sm:text-sm font-semibold text-navy-900">Livrare Rapidă (24-48 ore)</div>
+                <div class="text-[11px] text-slate-500">Primești toate fotografiile editate în maxim 2 zile</div>
+              </div>
+            </div>
+            <span class="text-xs font-mono font-bold text-navy-700">+200 lei</span>
+          </label>
+
+          <label class="flex items-center justify-between p-3 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer transition-colors">
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="chkPreSession" class="w-4 h-4 text-navy-700 rounded border-slate-300 focus:ring-navy-700">
+              <div>
+                <div class="text-xs sm:text-sm font-semibold text-navy-900">Mini-ședință Foto Înainte de Petrecere</div>
+                <div class="text-[11px] text-slate-500">Cadre portret dedicate cu sărbătoritul/a (aprox. 45 min)</div>
+              </div>
+            </div>
+            <span class="text-xs font-mono font-bold text-navy-700">+150 lei</span>
+          </label>
+        </div>
+      </div>
+
       <!-- REZULTAT PREȚ (Card Elegant Navy Blue) -->
       <div class="bg-navy-900 text-white rounded-2xl p-6 sm:p-7 mb-6 shadow-md">
         <div class="flex items-center justify-between mb-2">
@@ -212,7 +270,7 @@
             Preț Estimativ
           </span>
           <span class="text-[11px] bg-white/10 px-2.5 py-0.5 rounded-full text-navy-100 font-mono font-medium">
-            Calcul Direct
+            Calcul Transparent
           </span>
         </div>
 
@@ -239,36 +297,73 @@
             <span>• Cost transport / deplasare:</span>
             <span id="valTransportFormula" class="font-bold text-white">0 lei</span>
           </div>
+          <div id="rowAddonsSummary" class="flex justify-between hidden">
+            <span id="lblAddonsSummary">• Opțiuni suplimentare:</span>
+            <span id="valAddonsFormula" class="font-bold text-white">0 lei</span>
+          </div>
         </div>
       </div>
 
-      <!-- Butoane de Acțiune (Fără WhatsApp, doar Copiază & Instagram) -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <!-- Copiază Calculul -->
-        <button id="btnCopyText" type="button"
-                class="w-full py-3 px-4 bg-navy-700 hover:bg-navy-800 active:scale-[0.99] text-white text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      <!-- Butoane de Acțiune -->
+      <div class="space-y-3">
+        <!-- Rând 1: Buton Direct WhatsApp -->
+        <a id="btnSendWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
+           class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
           </svg>
-          <span>Copiază calculul</span>
-        </button>
-
-        <!-- Instagram Dodo -->
-        <a href="https://www.instagram.com/photosby_dodo/" target="_blank" rel="noopener noreferrer"
-           class="w-full py-3 px-4 border border-slate-300 bg-white hover:bg-slate-50 hover:border-navy-700 active:scale-[0.99] text-navy-900 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
-          <svg class="w-4 h-4 text-navy-700" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-          <span>Instagram @photosby_dodo</span>
+          <span>Trimite detalii pe WhatsApp</span>
         </a>
+
+        <!-- Rând 2: Copiază & Instagram -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button id="btnCopyText" type="button"
+                  class="w-full py-3 px-4 bg-navy-700 hover:bg-navy-800 active:scale-[0.99] text-white text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copiază calculul</span>
+          </button>
+
+          <a href="https://www.instagram.com/photosby_dodo/" target="_blank" rel="noopener noreferrer"
+             class="w-full py-3 px-4 border border-slate-300 bg-white hover:bg-slate-50 hover:border-navy-700 active:scale-[0.99] text-navy-900 text-xs sm:text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
+            <svg class="w-4 h-4 text-navy-700" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            <span>Instagram @photosby_dodo</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Secțiunea: Ce include orice pachet -->
+      <div class="mt-8 pt-6 border-t border-slate-200">
+        <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">Ce include fiecare serviciu:</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-slate-700">
+          <div class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span>Toate fotografiile editate (culori, lumină, contrast)</span>
+          </div>
+          <div class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span>Galerie online securizată (valabilă 3 luni)</span>
+          </div>
+          <div class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span>Livrabile la rezoluție maximă (print & social media)</span>
+          </div>
+          <div class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200">
+            <span class="text-emerald-600 font-bold">✓</span>
+            <span>Termen de predare: 7-14 zile lucrătoare</span>
+          </div>
+        </div>
       </div>
 
       <!-- Explicația formulei în detaliu -->
       <div class="mt-8 pt-6 border-t border-slate-200">
-        <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-2.5">Formula matematică de calcul:</h3>
+        <h3 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-2.5">Formula de calcul:</h3>
         <div class="font-mono text-xs text-navy-900 bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3 overflow-x-auto">
-          PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT
+          PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT + OPȚIUNI
         </div>
         <ul class="text-xs text-slate-600 space-y-1.5">
           <li>• <strong class="text-navy-900">200 lei</strong> = prețul de bază pentru prima oră</li>
