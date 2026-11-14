@@ -111,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     endHour: 2,
     locationZone: 'city', // 'city', 'zone1', 'zone2', 'zone3'
     locationName: 'București (în oraș)',
-    transportCost: 30, // 30 lei in oras pentru Uber de noapte acasa
+    transportCost: 0, // In oras se deconteaza cursa de UBER
+    transportLabel: 'UBER',
     addons: {
       express: false, // 200 lei
       preSession: false // 150 lei
@@ -119,10 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const ZONE_CONFIG = {
-    city: { cost: 30, label: 'În oraș (+30 lei Uber noapte)', desc: 'București (în oraș)' },
-    zone1: { cost: 60, label: 'Zona 1: Ilfov Apropiat (+60 lei)', desc: 'Zona 1: Ilfov Apropiat (Ghencea, Chiajna, Otopeni, etc.)' },
-    zone2: { cost: 100, label: 'Zona 2: Ilfov Exterior (+100 lei)', desc: 'Zona 2: Ilfov Exterior (Domnești, Corbeanca, Snagov, etc.)' },
-    zone3: { cost: 150, label: 'Zona 3: Peste 35 km (+150 lei)', desc: 'Zona 3: Peste 35 km / În afara Ilfovului' }
+    city: { cost: 0, displayVal: 'UBER', label: 'În oraș (UBER noapte)', desc: 'București (în oraș) - UBER' },
+    zone1: { cost: 60, displayVal: '60 lei', label: 'Zona 1: Ilfov Apropiat (+60 lei)', desc: 'Zona 1: Ilfov Apropiat (Ghencea, Chiajna, Otopeni, etc.)' },
+    zone2: { cost: 100, displayVal: '100 lei', label: 'Zona 2: Ilfov Exterior (+100 lei)', desc: 'Zona 2: Ilfov Exterior (Domnești, Corbeanca, Snagov, etc.)' },
+    zone3: { cost: 150, displayVal: '150 lei', label: 'Zona 3: Peste 35 km (+150 lei)', desc: 'Zona 3: Peste 35 km / În afara Ilfovului' }
   };
 
   // Helper to compute duration across midnight safely
@@ -164,15 +165,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (state.addons.express) activeAddons.push('Livrare Rapidă 24-48h (+200 lei)');
     if (state.addons.preSession) activeAddons.push('Mini-ședință Portret înainte (+150 lei)');
 
+    const transportText = state.locationZone === 'city' ? 'UBER (decontare la final)' : `${state.transportCost} lei`;
+
     return `📸 ESTIMARE FOTO MAJORAT - PHOTOS BY DODO\n` +
       `-----------------------------------------\n` +
       (state.date ? `• Data evenimentului: ${state.date}\n` : '') +
       `• Număr persoane: ${state.guests} invitați\n` +
       `• Interval fotografiere: ${startFormatted} - ${endFormatted} (${ORE} ore)\n` +
       `• Sosire: cu 30 min înainte de ${startFormatted} pentru echipament\n` +
-      `• Locație / Zonă: ${state.locationName} (${state.transportCost} lei)\n` +
+      `• Locație / Deplasare: ${state.locationName} (${transportText})\n` +
       (activeAddons.length > 0 ? `• Opțiuni suplimentare: ${activeAddons.join(', ')}\n` : '') +
-      `• PREȚ TOTAL: ${total} LEI\n` +
+      `• PREȚ ESTIMAT: ${total} LEI` + (state.locationZone === 'city' ? ' + UBER noapte\n' : '\n') +
       `-----------------------------------------\n` +
       `Instagram: https://www.instagram.com/photosby_dodo/`;
   }
@@ -229,11 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Transport row
     if (elValTransport) {
-      elValTransport.textContent = `${TRANSPORT} lei`;
+      elValTransport.textContent = state.locationZone === 'city' ? 'UBER' : `${TRANSPORT} lei`;
     }
     if (elLblTransport) {
       elLblTransport.textContent = state.locationZone === 'city'
-        ? '• Uber noapte acasă (în oraș):'
+        ? '• Deplasare în oraș (noaptea):'
         : `• Deplasare ${state.locationName}:`;
     }
 
@@ -420,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fillOpacity: 0.22,
       weight: 2
     }).addTo(map);
-    circleCity.bindTooltip('București în oraș (+30 lei Uber)', { sticky: true });
+    circleCity.bindTooltip('București în oraș (UBER)', { sticky: true });
 
     // Center Reference Marker (Piața Unirii)
     L.circleMarker(CENTER_BUCHAREST, {
