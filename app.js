@@ -3,11 +3,12 @@
  * https://www.instagram.com/photosby_dodo/
  *
  * FORMULA:
- * PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT
+ * PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT + OPȚIUNI
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- DOM Elements ---
+  const elEventDate = document.getElementById('inputEventDate');
   const elGuestsSlider = document.getElementById('inputGuestsSlider');
   const elGuestsDisplay = document.getElementById('txtGuestsDisplay');
   const elBtnMinus5 = document.getElementById('btnMinus5');
@@ -17,8 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const elSelectStart = document.getElementById('selectStartHour');
   const elSelectEnd = document.getElementById('selectEndHour');
   const elHoursTotalBadge = document.getElementById('txtHoursTotalBadge');
+  const elAlertInvalidInterval = document.getElementById('alertInvalidInterval');
 
   const elInputTransport = document.getElementById('inputTransport');
+
+  // Addons
+  const elChkExpress = document.getElementById('chkExpressDelivery');
+  const elChkPreSession = document.getElementById('chkPreSession');
 
   // Outputs
   const elGrandTotal = document.getElementById('txtGrandTotal');
@@ -28,23 +34,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const elValGuestsExtra = document.getElementById('valGuestsExtraFormula');
   const elRowTransport = document.getElementById('rowTransportSummary');
   const elValTransport = document.getElementById('valTransportFormula');
+  const elRowAddons = document.getElementById('rowAddonsSummary');
+  const elValAddons = document.getElementById('valAddonsFormula');
 
   const elBtnCopyText = document.getElementById('btnCopyText');
+  const elBtnWhatsapp = document.getElementById('btnSendWhatsapp');
   const elToast = document.getElementById('toast');
 
   // --- State ---
   let state = {
+    date: '',
     guests: 30,
     startHour: 20,
     endHour: 2,
-    transport: 0
+    transport: 0,
+    addons: {
+      express: false, // 200 lei
+      preSession: false // 150 lei
+    }
   };
 
-  // Helper to compute duration across midnight
+  // Helper to compute duration across midnight safely
   function computeDuration(start, end) {
     let s = parseInt(start, 10);
     let e = parseInt(end, 10);
-    if (e <= s) {
+    if (s === e) {
+      return 0; // Invalid / 0 hours
+    }
+    if (e < s) {
       return (e + 24) - s;
     }
     return e - s;
@@ -60,9 +77,44 @@ document.addEventListener('DOMContentLoaded', () => {
     el.style.background = `linear-gradient(to right, #1e3a8a 0%, #1e3a8a ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`;
   }
 
+  // Generate readable summary text
+  function generateSummaryText() {
+    const ORE = computeDuration(state.startHour, state.endHour);
+    const total = elGrandTotal.textContent;
+    const startFormatted = `${state.startHour}:00`;
+    const endFormatted = state.endHour < 10 ? `0${state.endHour}:00` : `${state.endHour}:00`;
+
+    let activeAddons = [];
+    if (state.addons.express) activeAddons.push('Livrare Rapidă 24-48h (+200 lei)');
+    if (state.addons.preSession) activeAddons.push('Mini-ședință Portret înainte (+150 lei)');
+
+    return `📸 ESTIMARE FOTO MAJORAT - PHOTOS BY DODO\n` +
+      `-----------------------------------------\n` +
+      (state.date ? `• Data evenimentului: ${state.date}\n` : '') +
+      `• Număr persoane: ${state.guests} invitați\n` +
+      `• Interval fotografiere: ${startFormatted} - ${endFormatted} (${ORE} ore)\n` +
+      `• Sosire: cu 30 min înainte de ${startFormatted} pentru echipament\n` +
+      (state.transport > 0 ? `• Cost transport: ${state.transport} lei\n` : '') +
+      (activeAddons.length > 0 ? `• Opțiuni suplimentare: ${activeAddons.join(', ')}\n` : '') +
+      `• PREȚ TOTAL: ${total} LEI\n` +
+      `-----------------------------------------\n` +
+      `Instagram: https://www.instagram.com/photosby_dodo/`;
+  }
+
   // --- Core Calculation ---
   function calculate() {
     const ORE = computeDuration(state.startHour, state.endHour);
+    const isIntervalValid = ORE > 0;
+
+    if (!isIntervalValid) {
+      if (elAlertInvalidInterval) elAlertInvalidInterval.classList.remove('hidden');
+      elGrandTotal.textContent = '0';
+      elHoursTotalBadge.textContent = 'Interval invalid';
+      return;
+    } else {
+      if (elAlertInvalidInterval) elAlertInvalidInterval.classList.add('hidden');
+    }
+
     const PERSOANE = state.guests;
     const TRANSPORT = Math.max(0, parseInt(state.transport, 10) || 0);
 
@@ -73,14 +125,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const extraGuests = Math.max(0, PERSOANE - 30);
     const extraGuestsCost = extraGuests * 5;
 
-    // PREȚ = 200 + 80 × (ORE - 1) + 5 × max(0, PERSOANE - 30) + TRANSPORT
-    const total = baseCost + extraHoursCost + extraGuestsCost + TRANSPORT;
+    let addonsCost = 0;
+    if (state.addons.express) addonsCost += 200;
+    if (state.addons.preSession) addonsCost += 150;
+
+    const total = baseCost + extraHoursCost + extraGuestsCost + TRANSPORT + addonsCost;
 
     // Update Grand Total
     elGrandTotal.textContent = total.toLocaleString('ro-RO');
 
     // Update Hours Badge
-    elHoursTotalBadge.textContent = `${ORE} ore de fotografiere (ORE = ${ORE})`;
+    elHoursTotalBadge.textContent = `${ORE} ore de fotografiere`;
 
     // Update Formula Breakdown
     elLblHoursExtra.textContent = `• ${extraHours} ore suplimentare × 80 lei:`;
@@ -102,6 +157,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       elRowTransport.classList.add('hidden');
     }
+
+    if (addonsCost > 0) {
+      elRowAddons.classList.remove('hidden');
+      elValAddons.textContent = `+${addonsCost} lei`;
+    } else {
+      elRowAddons.classList.add('hidden');
+    }
+
+    // Update WhatsApp link href
+    if (elBtnWhatsapp) {
+      const summary = generateSummaryText();
+      elBtnWhatsapp.href = `https://wa.me/?text=${encodeURIComponent(summary)}`;
+    }
   }
 
   // Set guests with step 5
@@ -119,7 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
     calculate();
   }
 
-  // Range Slider Events
+  // Event Listeners
+  if (elEventDate) {
+    elEventDate.addEventListener('change', (e) => {
+      state.date = e.target.value;
+      calculate();
+    });
+  }
+
   elGuestsSlider.addEventListener('input', (e) => {
     setGuests(e.target.value);
   });
@@ -127,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setGuests(e.target.value);
   });
 
-  // Buttons Step -5 / +5
   elBtnMinus5.addEventListener('click', () => {
     setGuests(state.guests - 5);
   });
@@ -135,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setGuests(state.guests + 5);
   });
 
-  // Dropdowns Events (Strict Select from list)
   function onDropdownChange() {
     state.startHour = parseInt(elSelectStart.value, 10);
     state.endHour = parseInt(elSelectEnd.value, 10);
@@ -145,31 +218,29 @@ document.addEventListener('DOMContentLoaded', () => {
   elSelectStart.addEventListener('change', onDropdownChange);
   elSelectEnd.addEventListener('change', onDropdownChange);
 
-  // Transport Event
   elInputTransport.addEventListener('input', (e) => {
     state.transport = parseInt(e.target.value, 10) || 0;
     calculate();
   });
 
+  // Addons Checkbox Events
+  if (elChkExpress) {
+    elChkExpress.addEventListener('change', (e) => {
+      state.addons.express = e.target.checked;
+      calculate();
+    });
+  }
+  if (elChkPreSession) {
+    elChkPreSession.addEventListener('change', (e) => {
+      state.addons.preSession = e.target.checked;
+      calculate();
+    });
+  }
+
   // Copy Calculation Action
   if (elBtnCopyText) {
     elBtnCopyText.addEventListener('click', () => {
-      const ORE = computeDuration(state.startHour, state.endHour);
-      const total = elGrandTotal.textContent;
-      const startFormatted = `${state.startHour}:00`;
-      const endFormatted = state.endHour < 10 ? `0${state.endHour}:00` : `${state.endHour}:00`;
-
-      const text = `📸 ESTIMARE FOTO MAJORAT - PHOTOS BY DODO\n` +
-        `-----------------------------------------\n` +
-        `• Număr persoane: ${state.guests} invitați\n` +
-        `• Interval fotografiere: ${startFormatted} - ${endFormatted} (${ORE} ore)\n` +
-        `• Notă: Sosire cu 30 de minute înainte de ora ${startFormatted} pentru pregătirea echipamentului.\n` +
-        (state.transport > 0 ? `• Cost transport: ${state.transport} lei\n` : '') +
-        `• PREȚ TOTAL: ${total} LEI\n` +
-        `-----------------------------------------\n` +
-        `Formula: 200 + 80 × (${ORE} - 1) + 5 × max(0, ${state.guests} - 30)\n` +
-        `Instagram: https://www.instagram.com/photosby_dodo/`;
-
+      const text = generateSummaryText();
       navigator.clipboard.writeText(text).then(() => {
         if (elToast) {
           elToast.classList.remove('opacity-0');
