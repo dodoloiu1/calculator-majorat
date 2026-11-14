@@ -363,7 +363,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- Leaflet Map Integration ---
+  // --- Point-in-Polygon Algorithm (Ray-Casting) ---
+  function isPointInPolygon(point, polygon) {
+    const x = point[0]; // lat
+    const y = point[1]; // lon
+    let inside = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i][0], yi = polygon[i][1];
+      const xj = polygon[j][0], yj = polygon[j][1];
+      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  // --- Leaflet Map Integration cu Poligoane Reale Delimitate ---
   const CENTER_BUCHAREST = [44.4323, 26.1063]; // Piata Unirii
   let map = null;
   let clientMarker = null;
@@ -384,46 +398,25 @@ document.addEventListener('DOMContentLoaded', () => {
       maxZoom: 18
     }).addTo(map);
 
-    // Zone 3: Peste 35 km (> 23000m raza)
-    const circleZ3 = L.circle(CENTER_BUCHAREST, {
-      radius: 35000,
-      color: '#f43f5e',
-      fillColor: '#f43f5e',
-      fillOpacity: 0.08,
-      weight: 1.5,
-      dashArray: '4, 4'
-    }).addTo(map);
-    circleZ3.bindTooltip('Zona 3: Peste 35 km (+150 lei)', { sticky: true });
+    if (typeof GEO_BOUNDARIES !== 'undefined') {
+      // 1. Poligon Județul Ilfov (Zonă bine delimitată)
+      const polyIlfov = L.polygon(GEO_BOUNDARIES.ilfov, {
+        color: '#f97316',
+        fillColor: '#f97316',
+        fillOpacity: 0.16,
+        weight: 2
+      }).addTo(map);
+      polyIlfov.bindTooltip('Județul Ilfov (Zona Deplasare: +60 / +100 lei)', { sticky: true });
 
-    // Zone 2: Ilfov Exterior (14000m - 23000m)
-    const circleZ2 = L.circle(CENTER_BUCHAREST, {
-      radius: 23000,
-      color: '#f97316',
-      fillColor: '#f97316',
-      fillOpacity: 0.12,
-      weight: 1.5
-    }).addTo(map);
-    circleZ2.bindTooltip('Zona 2: Ilfov Exterior (+100 lei)', { sticky: true });
-
-    // Zone 1: Ilfov Apropiat (8500m - 14000m)
-    const circleZ1 = L.circle(CENTER_BUCHAREST, {
-      radius: 14000,
-      color: '#f59e0b',
-      fillColor: '#f59e0b',
-      fillOpacity: 0.15,
-      weight: 2
-    }).addTo(map);
-    circleZ1.bindTooltip('Zona 1: Ilfov Apropiat (+60 lei)', { sticky: true });
-
-    // Zone 0: Bucuresti in oras (0 - 8500m raza medie)
-    const circleCity = L.circle(CENTER_BUCHAREST, {
-      radius: 8500,
-      color: '#10b981',
-      fillColor: '#10b981',
-      fillOpacity: 0.22,
-      weight: 2
-    }).addTo(map);
-    circleCity.bindTooltip('București în oraș (UBER)', { sticky: true });
+      // 2. Poligon Municipiul București (Zonă bine delimitată)
+      const polyBucharest = L.polygon(GEO_BOUNDARIES.bucharest, {
+        color: '#10b981',
+        fillColor: '#10b981',
+        fillOpacity: 0.24,
+        weight: 2.5
+      }).addTo(map);
+      polyBucharest.bindTooltip('Municipiul București (UBER)', { sticky: true });
+    }
 
     // Center Reference Marker (Piața Unirii)
     L.circleMarker(CENTER_BUCHAREST, {
@@ -440,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Calculate Distance & Determine Zone
+  // Calculate Distance & Determine Exact Zone based on Boundaries
   function calculateDistanceKm(lat1, lon1, lat2, lon2) {
     const R = 6371; // Earth radius in km
     const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -454,16 +447,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleLocationSelected(lat, lon, label) {
     const distKm = calculateDistanceKm(CENTER_BUCHAREST[0], CENTER_BUCHAREST[1], lat, lon);
+    const point = [lat, lon];
     
     let detectedZone = 'city';
-    if (distKm > 25) {
-      detectedZone = 'zone3';
-    } else if (distKm > 14) {
-      detectedZone = 'zone2';
-    } else if (distKm > 8.5) {
-      detectedZone = 'zone1';
-    } else {
+
+    // Verificare geometrică exactă pe poligoanele reale
+    const inBucharest = typeof GEO_BOUNDARIES !== 'undefined' && isPointInPolygon(point, GEO_BOUNDARIES.bucharest);
+    const inIlfov = typeof GEO_BOUNDARIES !== 'undefined' && isPointInPolygon(point, GEO_BOUNDARIES.ilfov);
+
+    if (inBucharest) {
       detectedZone = 'city';
+    } else if (inIlfov) {
+      // Dacă e în Ilfov, delimităm după distanța față de oraș
+      // Sub 16km = Ilfov apropiat (+60 lei), peste 16km = Ilfov exterior (+100 lei)
+      if (distKm <= 16) {
+        detectedZone = 'zone1';
+      } else {
+        detectedZone = 'zone2';
+      }
+    } else {
+      // În afara Ilfovului
+      detectedZone = 'zone3';
     }
 
     setZone(detectedZone, `${label} (~${Math.round(distKm)} km)`);
@@ -481,7 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
           })
         }).addTo(map);
       }
-      clientMarker.bindPopup(`<b>${label}</b><br>Distanță: ~${distKm.toFixed(1)} km<br>Zonă: ${ZONE_CONFIG[detectedZone].label}`).openPopup();
+      clientMarker.bindPopup(`<b>${label}</b><br>Zonă detectată: ${ZONE_CONFIG[detectedZone].label}<br>Distanță: ~${distKm.toFixed(1)} km`).openPopup();
       map.setView([lat, lon], 12);
     }
   }
