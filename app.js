@@ -8,6 +8,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // --- CONFIG: NUMĂR WHATSAPP CLIENT ---
+  const WHATSAPP_PHONE = '40736195520';
+
   // --- STATE ---
   let state = {
     date: '',
@@ -84,10 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const endFormatted = state.endHour < 10 ? `0${state.endHour}:00` : `${state.endHour}:00`;
 
     let activeAddons = [];
-    if (state.addons.express) activeAddons.push('Livrare Rapidă 24-48h (+200 lei)');
-    if (state.addons.preSession) activeAddons.push('Mini-ședință Portret înainte (+150 lei)');
+    if (state.addons.express) activeAddons.push('Predare rapidă 24-48h (+200 lei)');
+    if (state.addons.preSession) activeAddons.push('Mini-ședință portret înainte (+150 lei)');
 
-    const transportInfo = state.locationZone === 'city' ? 'UBER (decontat la final)' : `${state.transportCost} lei`;
+    const transportInfo = state.locationZone === 'city' ? 'Uber decontat de tine, la final (noaptea)' : `${state.transportCost} lei`;
 
     return `📸 ESTIMARE FOTO MAJORAT - PHOTOS BY DODO\n` +
       `-----------------------------------------\n` +
@@ -95,9 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `• Număr persoane: ${state.guests} invitați\n` +
       `• Interval fotografiere: ${startFormatted} - ${endFormatted} (${ORE} ore)\n` +
       `• Sosire: cu 30 min înainte de ${startFormatted} pentru echipament\n` +
-      `• Locație / Deplasare: ${state.locationName} (${transportInfo})\n` +
-      (activeAddons.length > 0 ? `• Opțiuni suplimentare: ${activeAddons.join(', ')}\n` : '') +
-      `• PREȚ ESTIMAT: ${total} LEI` + (state.locationZone === 'city' ? ' + UBER noapte\n' : '\n') +
+      `• Locație: ${state.locationName} (${transportInfo})\n` +
+      (activeAddons.length > 0 ? `• Opțiuni: ${activeAddons.join(', ')}\n` : '') +
+      `• PREȚ ESTIMAT: ${total} LEI` + (state.locationZone === 'city' ? ' + Uber noapte\n' : '\n') +
       `-----------------------------------------\n` +
       `Instagram: https://www.instagram.com/photosby_dodo/`;
   }
@@ -138,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elMobileTotal) elMobileTotal.textContent = total.toLocaleString('ro-RO');
 
     // Update Badge
-    elHoursTotalBadge.textContent = `${ORE} ORE DE FOTOGRAFIERE`;
+    elHoursTotalBadge.textContent = `${ORE} ORE DE EVENIMENT`;
 
     // Update Breakdown
     elLblHoursExtra.textContent = `ORE SUPLIMENTARE (${extraHours} × 80 LEI):`;
@@ -168,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
       elRowAddons.classList.add('hidden');
     }
 
-    // Update WhatsApp links
+    // Update WhatsApp links with international format 40736195520
     const summary = generateSummaryText();
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(summary)}`;
+    const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(summary)}`;
     if (elBtnWhatsapp) elBtnWhatsapp.href = waUrl;
     if (elBtnMobileWhatsapp) elBtnMobileWhatsapp.href = waUrl;
   }
@@ -261,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- LEAFLET MAP WITH CARTO DB DARK MATTER & STRICT 1PX POLYGONS ---
+  // --- LEAFLET MAP WITH CARTO DB DARK MATTER & STRICT 1PX NON-NEON POLYGONS ---
   const CENTER_BUCHAREST = [44.4323, 26.1063];
   let map = null;
   let clientMarker = null;
@@ -312,9 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
         clientMarker.setLatLng([lat, lon]);
       } else {
         clientMarker = L.circleMarker([lat, lon], {
-          radius: 7,
+          radius: 6,
           color: '#c6ff00',
-          fillColor: '#000000',
+          fillColor: '#0a0a0a',
           fillOpacity: 1,
           weight: 2
         }).addTo(map);
@@ -335,25 +338,25 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollWheelZoom: false
     });
 
-    // CartoDB Dark Matter Tiles (Clean, dark, minimal)
+    // CartoDB Dark Matter Tiles cu atribuire oficiala
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap, &copy; CARTO',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
       maxZoom: 18
     }).addTo(map);
 
     if (typeof GEO_BOUNDARIES !== 'undefined') {
-      // 1px Non-neon polygons
+      // Poligoane stricte 1px: Bucuresti = --accent (#c6ff00), Ilfov = --fg (#e8e6e1)
       L.polygon(GEO_BOUNDARIES.ilfov, {
-        color: '#f97316',
-        fillColor: '#f97316',
-        fillOpacity: 0.08,
+        color: '#e8e6e1',
+        fillColor: '#e8e6e1',
+        fillOpacity: 0.05,
         weight: 1
       }).addTo(map).bindTooltip('JUDEȚUL ILFOV (+60 / +100 LEI)', { sticky: true });
 
       L.polygon(GEO_BOUNDARIES.bucharest, {
-        color: '#10b981',
-        fillColor: '#10b981',
-        fillOpacity: 0.15,
+        color: '#c6ff00',
+        fillColor: '#c6ff00',
+        fillOpacity: 0.08,
         weight: 1
       }).addTo(map).bindTooltip('MUNICIPIUL BUCUREȘTI (UBER)', { sticky: true });
     }
@@ -377,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!query) return;
 
     if (elBtnSearchAddress) {
-      elBtnSearchAddress.textContent = 'CAUT...';
+      elBtnSearchAddress.textContent = '...';
       elBtnSearchAddress.disabled = true;
     }
 
@@ -414,8 +417,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- DYNAMIC RATIO DETECTION & ASYMMETRIC GRID SPANS ---
+  // Detects actual natural dimensions to ensure landscape=col-span 2, portrait=row-span 2
+  const figures = document.querySelectorAll('.brutalist-figure');
+  figures.forEach(fig => {
+    const img = fig.querySelector('img');
+    if (!img) return;
+
+    function applySpan() {
+      if (img.naturalWidth && img.naturalHeight) {
+        if (img.naturalWidth > img.naturalHeight) {
+          fig.classList.remove('portrait');
+          fig.classList.add('landscape');
+        } else {
+          fig.classList.remove('landscape');
+          fig.classList.add('portrait');
+        }
+      }
+    }
+
+    if (img.complete) {
+      applySpan();
+    } else {
+      img.addEventListener('load', applySpan, { once: true });
+    }
+  });
+
   // --- ADVANCED LIGHTBOX SYSTEM ---
-  // Pure black, arrows, swipe, Esc, mono counter 01/08, scroll lock, preloading
   const GALLERY_IMAGES = [
     'assets/gallery/photo-1.jpg',
     'assets/gallery/photo-2.jpg',
@@ -512,8 +540,8 @@ document.addEventListener('DOMContentLoaded', () => {
       touchEndX = e.changedTouches[0].screenX;
       const diff = touchEndX - touchStartX;
       if (Math.abs(diff) > 50) {
-        if (diff < 0) nextLightbox(); // Swiped left -> next
-        else prevLightbox(); // Swiped right -> prev
+        if (diff < 0) nextLightbox();
+        else prevLightbox();
       }
     }, { passive: true });
   }

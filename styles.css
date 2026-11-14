@@ -1,18 +1,30 @@
 /* ==========================================================================
-   PHOTOS BY DODO — MOODY BRUTALIST SYSTEM
+   PHOTOS BY DODO — MOODY DARK BRUTALIST DESIGN SYSTEM
    Strict Rules: Zero border-radius, zero box-shadow, zero blur, zero gradients.
-   Background: #0a0a0a, Text: #e8e6e1, Accent: #c6ff00
+   Palette:
+     --bg: #0a0a0a
+     --fg: #e8e6e1
+     --muted: #9a9a94
+     --line: #e8e6e1
+     --border: #222222
+     --accent: #c6ff00
    ========================================================================== */
 
 :root {
   --bg: #0a0a0a;
-  --text: #e8e6e1;
-  --accent: #c6ff00;
+  --fg: #e8e6e1;
+  --muted: #9a9a94;
+  --line: #e8e6e1;
   --border: #222222;
-  --border-light: #333333;
+  --accent: #c6ff00;
   --font-display: 'Anton', 'Archivo Black', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 * {
@@ -23,11 +35,12 @@
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+  transition-duration: 100ms !important;
 }
 
 body {
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--fg);
   font-family: var(--font-mono);
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
@@ -38,183 +51,410 @@ body {
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: -0.04em;
-  line-height: 0.9;
+  line-height: 0.88;
 }
 
 .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Custom Sharp Range Slider */
-.custom-range {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 4px;
-  background: var(--border-light);
-  outline: none;
-  cursor: pointer;
-  margin: 16px 0;
-  display: block;
+/* Minimalistic Brutalist Transitions */
+a, button, select, input {
+  transition: color 100ms linear, background-color 100ms linear, border-color 100ms linear !important;
 }
 
-.custom-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 24px;
-  background: var(--text);
-  border: 1px solid #000;
-  cursor: pointer;
-  transition: background-color 0.1s ease;
-}
+/* ==========================================================================
+   1. CONTROALE NATIVE RIGUROASE
+   select, input[type=date], input[type=text]: height 48px, 1px solid var(--line),
+   background: var(--bg), color: var(--fg)
+   ========================================================================== */
 
-.custom-range::-webkit-slider-thumb:hover,
-.custom-range::-webkit-slider-thumb:active {
-  background: var(--accent);
-}
-
-.custom-range::-moz-range-thumb {
-  width: 16px;
-  height: 24px;
-  background: var(--text);
-  border: 1px solid #000;
-  cursor: pointer;
-}
-
-.custom-range::-moz-range-thumb:hover,
-.custom-range::-moz-range-thumb:active {
-  background: var(--accent);
-}
-
-/* Custom Sharp Select */
-.custom-select {
+.native-input {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-color: #0d0d0d;
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 10px 14px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e8e6e1' stroke-width='2'%3E%3Cpath stroke-linecap='square' stroke-linejoin='miter' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 14px 14px;
-  cursor: pointer;
-}
-
-.custom-select:focus {
-  outline: 1px solid var(--accent);
-  border-color: var(--accent);
-}
-
-/* Contact Sheet Gallery Grayscale + Contrast + Grain */
-.contact-sheet {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  background: var(--border);
-  gap: 1px;
-  border: 1px solid var(--border);
-}
-
-.contact-cell {
-  position: relative;
-  overflow: hidden;
-  background: #000;
-  cursor: pointer;
-}
-
-.contact-img {
+  background-color: var(--bg) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--line) !important;
+  height: 48px !important;
+  padding: 0 14px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  outline: none;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: grayscale(100%) contrast(125%) brightness(90%);
-  transition: filter 0.25s ease, transform 0.3s ease;
   display: block;
 }
 
-.contact-cell:hover .contact-img,
-.contact-cell:active .contact-img {
-  filter: grayscale(0%) contrast(105%) brightness(100%);
-  transform: scale(1.02);
+.native-input:focus {
+  outline: 2px solid var(--accent) !important;
+  outline-offset: 0 !important;
+  border-color: var(--accent) !important;
 }
 
-/* Subtle Film Grain Overlay */
-.grain-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.7;
-}
-
-/* Brutalist Button Styles */
-.btn-brutalist {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 14px 20px;
-  border: 1px solid var(--border-light);
-  background: transparent;
-  color: var(--text);
+/* Custom Select Arrow in --fg */
+select.native-input {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23e8e6e1' stroke-width='2'%3E%3Cpath stroke-linecap='square' stroke-linejoin='miter' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px 14px;
+  padding-right: 38px !important;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-.btn-brutalist:hover {
-  background: var(--accent);
-  color: #000;
-  border-color: var(--accent);
-}
-
-.btn-brutalist-accent {
-  background: var(--accent);
-  color: #000;
-  border: 1px solid var(--accent);
-}
-
-.btn-brutalist-accent:hover {
-  background: #d4ff33;
-  border-color: #d4ff33;
-}
-
-/* Leaflet Dark Matter Tuning */
-.leaflet-container {
-  background: #0a0a0a !important;
+select.native-input option {
+  background-color: #0a0a0a !important;
+  color: #e8e6e1 !important;
   font-family: var(--font-mono) !important;
-  border-radius: 0 !important;
-}
-
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip {
-  background: #000000 !important;
-  color: var(--text) !important;
-  border: 1px solid var(--border-light) !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  font-family: var(--font-mono) !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
   text-transform: uppercase !important;
 }
 
-.leaflet-popup-content {
-  margin: 8px 12px !important;
-  line-height: 1.4 !important;
+/* Date picker indicator inverted */
+input[type="date"].native-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
 
-/* Lightbox Modal */
+/* Range Slider */
+.custom-range {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.custom-range:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+/* WebKit Slider Track & Thumb */
+.custom-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  background: var(--fg);
+  border: none;
+}
+
+.custom-range::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  margin-top: -8px;
+}
+
+/* Firefox Slider Track & Thumb */
+.custom-range::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  background: var(--fg);
+  border: none;
+}
+
+.custom-range::-moz-range-progress {
+  background: var(--accent);
+  height: 2px;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+
+/* Checkbox Row Clicabil */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-row:hover {
+  background: #141414;
+  border-color: var(--line);
+}
+
+.native-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  shrink-0;
+  position: relative;
+}
+
+.native-checkbox:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+.native-checkbox:checked {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.native-checkbox:checked::after {
+  content: "✕";
+  color: #000000;
+  font-size: 14px;
+  font-weight: 900;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+}
+
+/* Butoane Step -5 / +5 */
+.btn-step {
+  height: 48px;
+  padding: 0 16px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-step:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn-step:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+/* Buton CAUTA lipit de input */
+.btn-search {
+  height: 48px;
+  padding: 0 20px;
+  background: var(--fg);
+  color: var(--bg);
+  border: 1px solid var(--fg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  shrink-0;
+}
+
+.btn-search:hover {
+  background: var(--bg);
+  color: var(--fg);
+  border-color: var(--line);
+}
+
+.btn-search:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+/* Action CTAs */
+.btn-action-primary {
+  width: 100%;
+  height: 56px;
+  background: var(--accent);
+  color: #000000;
+  border: 1px solid var(--accent);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-action-primary:hover {
+  background: #000000;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-action-primary:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.btn-action-secondary {
+  width: 100%;
+  height: 48px;
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-action-secondary:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn-action-secondary:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+}
+
+/* ==========================================================================
+   2. HARTĂ (CartoDB Dark Matter, Poligoane fără neon, Controale pătrate)
+   ========================================================================== */
+
+#map {
+  width: 100%;
+  height: 280px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+
+@media (min-width: 768px) {
+  #map {
+    height: 360px;
+  }
+}
+
+.leaflet-tile {
+  outline: 1px solid transparent !important;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  margin: 12px !important;
+}
+
+.leaflet-control-zoom a {
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 30px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 16px !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--fg) !important;
+  color: var(--bg) !important;
+}
+
+/* ==========================================================================
+   3. GALERIE „POZE” (Dense Asymmetric Grid, Max 2 Screens)
+   ========================================================================== */
+
+.brutalist-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 180px;
+  grid-auto-flow: dense;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  background: var(--bg);
+}
+
+@media (min-width: 768px) {
+  .brutalist-gallery {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 260px;
+  }
+}
+
+.brutalist-figure {
+  margin: 0;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+  background: #000000;
+  cursor: pointer;
+}
+
+.brutalist-figure.landscape {
+  grid-column: span 2;
+}
+
+.brutalist-figure.portrait {
+  grid-row: span 2;
+}
+
+.brutalist-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.15);
+  display: block;
+}
+
+.brutalist-figure:hover .brutalist-img,
+.brutalist-figure:active .brutalist-img {
+  filter: none;
+}
+
+/* ==========================================================================
+   4. LIGHTBOX & MODAL
+   ========================================================================== */
+
 #lightboxModal {
-  background: rgba(0, 0, 0, 0.98);
+  background: #000000;
 }
 
 body.scroll-locked {
   overflow: hidden !important;
+}
+
+/* Toast */
+#toast {
+  background: var(--accent);
+  color: #000000;
+  border: 1px solid #000000;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
 }
