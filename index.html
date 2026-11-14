@@ -1,176 +1,149 @@
 <!DOCTYPE html>
-<html lang="ro" class="light">
+<html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculator Servicii Foto Majorat — Photos by Dodo</title>
-  <meta name="description" content="Configurator și estimare tarif pentru servicii foto de majorat. Photos by Dodo.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PHOTOS BY DODO — ESTIMATOR FOTO MAJORAT</title>
+  <meta name="description" content="Calculator foto majorat. Brutalist, direct, fără compromisuri.">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://dodoloiu1.github.io/calculator-majorat/">
-  <meta property="og:title" content="Photos by Dodo — Estimare Servicii Foto Majorat">
-  <meta property="og:description" content="Configurează durata, numărul de invitați și locația pentru o ofertă instantă și transparentă.">
-  <meta property="og:image" content="https://dodoloiu1.github.io/calculator-majorat/og-image.svg">
+  <meta property="og:title" content="PHOTOS BY DODO — FOTO MAJORAT">
+  <meta property="og:description" content="Estimator de preț transparent pentru servicii foto de majorat.">
+  <meta property="og:image" content="https://dodoloiu1.github.io/calculator-majorat/assets/gallery/photo-4.jpg">
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📸</text></svg>">
 
-  <!-- Inter & JetBrains Mono Fonts -->
+  <!-- Fonts: Anton (Display) & JetBrains Mono (Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-          },
-          colors: {
-            brand: {
-              50: '#f8fafc',
-              100: '#f1f5f9',
-              900: '#0f172a',
-              950: '#020617',
-            }
-          }
-        }
-      }
-    }
-  </script>
 
   <link rel="stylesheet" href="styles.css">
-
-  <script>
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  </script>
 </head>
-<body class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
+<body class="bg-[#0a0a0a] text-[#e8e6e1] font-mono selection:bg-[#c6ff00] selection:text-black min-h-screen">
 
-  <!-- Top Navigation Bar -->
-  <header class="bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200/80 dark:border-zinc-800/80 sticky top-0 z-30">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+  <!-- TOP HEADER STRIP -->
+  <header class="border-b border-[#222222] bg-[#0a0a0a] sticky top-0 z-40">
+    <div class="w-full flex items-center justify-between px-4 sm:px-8 h-12">
       <div class="flex items-center gap-3">
-        <a href="https://www.instagram.com/photosby_dodo/" target="_blank" rel="noopener noreferrer" class="font-semibold text-sm sm:text-base tracking-tight text-zinc-900 dark:text-white hover:opacity-80 transition-opacity flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
-          <span>Photos by Dodo</span>
-        </a>
-        <span class="text-zinc-300 dark:text-zinc-700">/</span>
-        <span class="text-xs text-zinc-500 font-medium">Majorat Estimator</span>
+        <span class="w-2 h-2 bg-[#c6ff00]"></span>
+        <span class="font-display text-sm tracking-wider text-[#e8e6e1]">PHOTOS BY DODO</span>
+        <span class="text-[#444] hidden sm:inline">/</span>
+        <span class="text-[10px] text-[#888] uppercase hidden sm:inline">18TH BIRTHDAY ARCHIVE & ESTIMATOR</span>
       </div>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Theme Toggle -->
-        <button id="btnThemeToggle" type="button" aria-label="Comută modul de afișare"
-                class="w-9 h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-          <svg id="iconSun" class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg id="iconMoon" class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-
-        <!-- Instagram Direct -->
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="#calculator" class="text-[#888] hover:text-[#c6ff00] uppercase transition-colors">Calculator &darr;</a>
+        <a href="#galerie" class="text-[#888] hover:text-[#c6ff00] uppercase transition-colors">Arhivă &darr;</a>
         <a href="https://www.instagram.com/photosby_dodo/" target="_blank" rel="noopener noreferrer" 
-           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-          <span class="hidden sm:inline">Instagram</span>
+           class="px-2.5 py-1 border border-[#333] hover:border-[#c6ff00] hover:text-[#c6ff00] transition-colors uppercase">
+          Instagram
         </a>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section Minimalist -->
-  <section class="max-w-4xl mx-auto px-4 pt-10 sm:pt-14 pb-6 w-full">
-    <div class="max-w-xl">
-      <h1 class="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white">
-        Configurator Servicii Foto
+  <!-- HERO SECTION: FULL BLEED IMAGE + MASSIVE TITLE -->
+  <section class="relative w-full min-h-[85vh] sm:min-h-[90vh] border-b border-[#222222] flex flex-col justify-between overflow-hidden bg-[#000]">
+    <!-- Background Full Bleed Photo (Hero image priority loading) -->
+    <img src="assets/gallery/photo-4.jpg" 
+         alt="Majorat Photos by Dodo" 
+         fetchpriority="high"
+         class="absolute inset-0 w-full h-full object-cover object-center filter grayscale contrast-125 brightness-75 opacity-60">
+    <div class="grain-overlay"></div>
+
+    <!-- Hero Top Status Indicator -->
+    <div class="relative z-10 p-4 sm:p-8 flex justify-between items-start text-[11px] text-[#888] uppercase tracking-wider">
+      <div>BUCHAREST & ILFOV / SEASON 2026-2027</div>
+      <div class="text-right">DISPONIBILITATE LIMITATĂ</div>
+    </div>
+
+    <!-- Massive Brutalist Title Overlay -->
+    <div class="relative z-10 px-4 sm:px-8 pb-8 pt-24 max-w-full">
+      <h1 class="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] leading-[0.82] tracking-tighter text-[#e8e6e1] select-none break-words">
+        MAJORAT<br>RAW.
       </h1>
-      <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-2 leading-relaxed">
-        Selectează detaliile evenimentului tău pentru o ofertă transparentă, fără costuri ascunse.
-      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-t border-[#333] pt-6">
+        <p class="max-w-md text-xs sm:text-sm text-[#aaa] uppercase leading-relaxed font-mono">
+          FOTOGRAFIE DOCUMENTARĂ ȘI DE PETRECERE PENTRU MAJORATE. FĂRĂ POZE RIGIDE. FĂRĂ CADRE ÎN SCENĂ. DOAR ATMOSFERA REALĂ.
+        </p>
+        <a href="#calculator" class="btn-brutalist-accent text-xs px-6 py-4 inline-flex items-center gap-3 shrink-0">
+          <span>CALCULEAZĂ PREȚUL ACUM</span>
+          <span>&darr;</span>
+        </a>
+      </div>
     </div>
   </section>
 
-  <!-- Main Content Layout (Form + Summary Card) -->
-  <main class="max-w-4xl mx-auto px-4 pb-16 w-full flex-1">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <!-- MAIN CALCULATOR & CONFIGURATOR PANEL -->
+  <section id="calculator" class="w-full border-b border-[#222222] bg-[#0a0a0a]">
+    
+    <!-- Section Header Strip -->
+    <div class="border-b border-[#222222] px-4 sm:px-8 py-4 flex items-center justify-between text-xs uppercase tracking-wider">
+      <div class="flex items-center gap-2">
+        <span class="text-[#c6ff00]">●</span>
+        <span class="font-bold">CONFIGURATOR ESTIMARE OFICIALĂ</span>
+      </div>
+      <span class="text-[#666] font-mono">FORMULA MATEMATICĂ TRANSPARENTĂ</span>
+    </div>
 
-      <!-- Stânga: Câmpurile Configuratorului (7 coloane) -->
-      <div class="lg:col-span-7 space-y-8">
+    <!-- Technical Grid Container -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 border-b border-[#222222]">
 
-        <!-- Pasul 1: Număr Persoane -->
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <span class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">Etapa 01</span>
-              <h2 class="text-sm font-semibold text-zinc-900 dark:text-white">Număr de invitați</h2>
+      <!-- STÂNGA: FORMULAR TEHNIC (7 coloane) -->
+      <div class="lg:col-span-7 border-b lg:border-b-0 lg:border-r border-[#222222]">
+
+        <!-- Randul 1: Număr Persoane -->
+        <div class="p-5 sm:p-7 border-b border-[#222222]">
+          <div class="flex items-baseline justify-between mb-2">
+            <span class="text-[11px] text-[#888] uppercase tracking-wider">01 // INVITAȚI</span>
+            <div class="flex items-baseline gap-2">
+              <span id="txtGuestsDisplay" class="font-mono text-2xl font-bold text-[#c6ff00]">30</span>
+              <span class="text-xs text-[#666] uppercase">PERSOANE</span>
             </div>
-            <span id="txtGuestsDisplay" class="font-mono text-sm font-semibold px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-lg text-zinc-900 dark:text-white">
-              30 pers
-            </span>
           </div>
 
           <input type="range" id="inputGuestsSlider" min="15" max="120" step="5" value="30" class="custom-range">
 
-          <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 pt-1">
-            <div class="flex items-center gap-1.5">
-              <button id="btnMinus5" type="button" class="px-2.5 py-1 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors font-mono">
-                -5
+          <div class="flex items-center justify-between text-[11px] pt-1">
+            <div class="flex gap-1">
+              <button id="btnMinus5" type="button" class="px-3 py-1.5 border border-[#333] hover:border-[#c6ff00] hover:text-[#c6ff00] transition-colors uppercase font-mono">
+                -5 PERS
               </button>
-              <button id="btnPlus5" type="button" class="px-2.5 py-1 border border-zinc-200 dark:border-zinc-700 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors font-mono">
-                +5
+              <button id="btnPlus5" type="button" class="px-3 py-1.5 border border-[#333] hover:border-[#c6ff00] hover:text-[#c6ff00] transition-colors uppercase font-mono">
+                +5 PERS
               </button>
             </div>
-            <span id="txtPersonRuleHint" class="font-normal text-[11px]">
-              Până la 30 de persoane incluse în tariful standard
+            <span id="txtPersonRuleHint" class="text-[#777] uppercase text-[10px]">
+              30 PERSOANE INCLUSE ÎN BAZĂ (+5 LEI / PERS DUPĂ 30)
             </span>
           </div>
         </div>
 
-        <!-- Pasul 2: Interval Orar & Dată -->
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <span class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">Etapa 02</span>
-              <h2 class="text-sm font-semibold text-zinc-900 dark:text-white">Program & Durată</h2>
-            </div>
-            <span id="txtHoursTotalBadge" class="font-mono text-xs font-medium px-2 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-700 dark:text-zinc-300">
-              6 ore
+        <!-- Randul 2: Ore & Data -->
+        <div class="p-5 sm:p-7 border-b border-[#222222]">
+          <div class="flex items-baseline justify-between mb-4">
+            <span class="text-[11px] text-[#888] uppercase tracking-wider">02 // INTERVAL DE FOTOGRAFIERE</span>
+            <span id="txtHoursTotalBadge" class="text-xs font-mono font-bold text-[#c6ff00] uppercase">
+              6 ORE DE EVENIMENT
             </span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="selectStartHour" class="block text-xs text-zinc-500 mb-1">Ora de început:</label>
-              <select id="selectStartHour" class="custom-select w-full px-3 py-2 text-xs sm:text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white font-mono focus:border-zinc-900 dark:focus:border-white focus:outline-none transition-colors">
+              <label for="selectStartHour" class="block text-[10px] text-[#777] uppercase mb-1.5 font-mono">ORA SOSIRE FOTOGRAF:</label>
+              <select id="selectStartHour" class="custom-select w-full">
                 <option value="17">17:00</option>
                 <option value="18">18:00</option>
                 <option value="19">19:00</option>
-                <option value="20" selected>20:00 (Standard)</option>
+                <option value="20" selected>20:00 (STANDARD)</option>
                 <option value="21">21:00</option>
                 <option value="22">22:00</option>
                 <option value="23">23:00</option>
@@ -178,253 +151,308 @@
             </div>
 
             <div>
-              <label for="selectEndHour" class="block text-xs text-zinc-500 mb-1">Ora de final:</label>
-              <select id="selectEndHour" class="custom-select w-full px-3 py-2 text-xs sm:text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white font-mono focus:border-zinc-900 dark:focus:border-white focus:outline-none transition-colors">
+              <label for="selectEndHour" class="block text-[10px] text-[#777] uppercase mb-1.5 font-mono">ORA FINAL EVENIMENT:</label>
+              <select id="selectEndHour" class="custom-select w-full">
                 <option value="21">21:00</option>
                 <option value="22">22:00</option>
                 <option value="23">23:00</option>
-                <option value="0">00:00 (Miezul nopții)</option>
-                <option value="1">01:00</option>
-                <option value="2" selected>02:00 (Noaptea)</option>
-                <option value="3">03:00</option>
-                <option value="4">04:00</option>
-                <option value="5">05:00</option>
-                <option value="6">06:00</option>
+                <option value="0">00:00 (MIEZUL NOPȚII)</option>
+                <option value="1">01:00 (NOAPTEA)</option>
+                <option value="2" selected>02:00 (NOAPTEA)</option>
+                <option value="3">03:00 (DIMINEAȚA)</option>
+                <option value="4">04:00 (DIMINEAȚA)</option>
+                <option value="5">05:00 (DIMINEAȚA)</option>
+                <option value="6">06:00 (DIMINEAȚA)</option>
               </select>
             </div>
           </div>
 
-          <!-- Dată Opțională -->
-          <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between gap-3">
-            <span class="text-xs text-zinc-500">Data evenimentului (opțional):</span>
-            <input type="date" id="inputEventDate" class="px-3 py-1.5 text-xs bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-800 dark:text-zinc-200 font-mono focus:outline-none">
+          <!-- Selector Data -->
+          <div class="pt-3 border-t border-[#1f1f1f] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <span class="text-[10px] text-[#777] uppercase font-mono">DATA PETRECERII (OPȚIONAL):</span>
+            <input type="date" id="inputEventDate" class="bg-[#000] border border-[#333] px-3 py-1.5 text-xs text-[#e8e6e1] font-mono focus:border-[#c6ff00] focus:outline-none uppercase">
           </div>
 
-          <div id="alertInvalidInterval" class="hidden mt-3 p-2.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 text-xs rounded-lg">
-            Intervalul orar selectat nu este valid.
+          <div id="alertInvalidInterval" class="hidden mt-3 p-3 border border-red-800 bg-red-950/40 text-red-400 text-xs uppercase font-mono">
+            EROARE: INTERVALUL ORAR NU POATE FI ZERO. SELECTEAZĂ MINIM 1 ORĂ.
           </div>
 
-          <p class="mt-3 text-[11px] text-zinc-400 leading-relaxed">
-            * Sosire la locație cu 30 de minute mai devreme pentru montarea și calibrarea echipamentului.
+          <p class="mt-3 text-[10px] text-[#666] uppercase font-mono">
+            * NOTĂ DE RESPECT: SOSESC CU 30 DE MINUTE MAI DEVREME PENTRU MONTAREA ECHIPAMENTULUI (GRATUIT).
           </p>
         </div>
 
-        <!-- Pasul 3: Locație & Hartă Delimitată -->
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm">
-          <div class="flex items-center justify-between mb-3">
-            <div>
-              <span class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">Etapa 03</span>
-              <h2 class="text-sm font-semibold text-zinc-900 dark:text-white">Locație & Deplasare</h2>
-            </div>
-            <span id="txtLocationBadge" class="font-mono text-xs font-medium px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900 rounded">
-              București (UBER)
+        <!-- Randul 3: Locație & Hartă Delimitată Brutalist -->
+        <div class="p-5 sm:p-7 border-b border-[#222222]">
+          <div class="flex items-baseline justify-between mb-3">
+            <span class="text-[11px] text-[#888] uppercase tracking-wider">03 // ZONĂ & DEPLASARE</span>
+            <span id="txtLocationBadge" class="text-xs font-mono font-bold text-[#c6ff00] uppercase">
+              BUCUREȘTI (UBER)
             </span>
           </div>
 
-          <!-- Search Form -->
+          <!-- Address Search -->
           <div class="flex gap-2 mb-3">
-            <input type="text" id="inputSearchAddress" placeholder="Caută sală, adresă sau localitate (ex: Domnești, Otopeni)..."
-                   class="w-full px-3.5 py-2 text-xs sm:text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-white focus:border-zinc-900 dark:focus:border-white focus:outline-none transition-colors">
-            <button id="btnSearchAddress" type="button" class="px-3.5 py-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-medium rounded-xl transition-colors shrink-0">
-              Localizează
+            <input type="text" id="inputSearchAddress" placeholder="INTRODU SALA, STRADA SAU LOCALITATEA..." 
+                   class="w-full bg-[#000] border border-[#333] px-3.5 py-2.5 text-xs text-[#e8e6e1] font-mono focus:border-[#c6ff00] focus:outline-none uppercase">
+            <button id="btnSearchAddress" type="button" class="btn-brutalist text-xs px-4 shrink-0">
+              CAUTĂ
             </button>
           </div>
 
-          <!-- Selector Zonă -->
-          <select id="selectLocationZone" class="custom-select w-full px-3 py-2 text-xs sm:text-sm bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-800 dark:text-zinc-200 font-medium mb-3 focus:outline-none">
-            <option value="city" selected>București (în oraș) — UBER (decontare cursă noaptea)</option>
-            <option value="zone1">Zona 1: Ilfov Apropiat (Ghencea, Chiajna, Otopeni, etc.) — +60 lei</option>
-            <option value="zone2">Zona 2: Ilfov Exterior (Domnești, Corbeanca, Snagov, etc.) — +100 lei</option>
-            <option value="zone3">Zona 3: Peste 35 km / În afara Ilfovului — +150 lei</option>
+          <!-- Manual Select Zone -->
+          <select id="selectLocationZone" class="custom-select w-full mb-3">
+            <option value="city" selected>BUCUREȘTI (ÎN ORAȘ) — UBER (DECONTARE CURSĂ NOAPTEA)</option>
+            <option value="zone1">ZONA 1: ILFOV APROPIAT (GHENCEA, CHIAJNA, OTOPENI, ETC.) — +60 LEI</option>
+            <option value="zone2">ZONA 2: ILFOV EXTERIOR (DOMNEȘTI, CORBEANCA, SNAGOV, ETC.) — +100 LEI</option>
+            <option value="zone3">ZONA 3: PESTE 35 KM / ÎN AFARA ILFOVULUI — +150 LEI</option>
           </select>
 
-          <!-- Hartă Interactivă cu Poligoane -->
-          <div class="relative rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
-            <div id="map" class="h-56 sm:h-64 w-full z-10"></div>
-            <div class="absolute bottom-2 left-2 z-[400] bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-2.5 py-1 rounded-md border border-zinc-200 dark:border-zinc-800 text-[10px] font-mono flex items-center gap-2">
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> București</span>
-              <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-orange-500 inline-block"></span> Ilfov</span>
+          <!-- Hartă CartoDB Dark Matter -->
+          <div class="relative border border-[#222222] h-60 w-full overflow-hidden">
+            <div id="map" class="w-full h-full"></div>
+            <div class="absolute bottom-2 left-2 z-[400] bg-[#000] border border-[#333] px-2 py-1 text-[9px] font-mono uppercase flex gap-3 text-[#aaa]">
+              <span>[VERDE] BUCUREȘTI</span>
+              <span>[PORTOCALIU] ILFOV</span>
             </div>
           </div>
         </div>
 
-        <!-- Pasul 4: Servicii Opționale -->
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm">
-          <div class="mb-3">
-            <span class="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">Etapa 04</span>
-            <h2 class="text-sm font-semibold text-zinc-900 dark:text-white">Opțiuni adiționale</h2>
-          </div>
+        <!-- Randul 4: Extra Add-ons -->
+        <div class="p-5 sm:p-7">
+          <span class="text-[11px] text-[#888] uppercase tracking-wider block mb-3">04 // OPȚIUNI EXTRA</span>
 
-          <div class="space-y-2.5">
-            <label class="flex items-center justify-between p-3 border border-zinc-200/80 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors">
+          <div class="space-y-2">
+            <label class="flex items-center justify-between p-3 border border-[#222] bg-[#0d0d0d] hover:border-[#444] cursor-pointer transition-colors">
               <div class="flex items-center gap-3">
-                <input type="checkbox" id="chkExpressDelivery" class="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 dark:focus:ring-white">
+                <input type="checkbox" id="chkExpressDelivery" class="w-4 h-4 bg-black border border-[#444] accent-[#c6ff00]">
                 <div>
-                  <div class="text-xs sm:text-sm font-medium text-zinc-900 dark:text-white">Predare urgentă (24-48 ore)</div>
-                  <div class="text-[11px] text-zinc-500">Fotografiile editate complet sunt livrate în 2 zile lucrătoare</div>
+                  <div class="text-xs font-bold uppercase text-[#e8e6e1]">PREDARE RAPIDĂ (24-48 ORE)</div>
+                  <div class="text-[10px] text-[#777] uppercase">TOATE CADRELE EDITATE COMPLETE ÎN MAXIM 2 ZILE</div>
                 </div>
               </div>
-              <span class="font-mono text-xs font-semibold text-zinc-900 dark:text-white">+200 lei</span>
+              <span class="font-mono text-xs font-bold text-[#c6ff00]">+200 LEI</span>
             </label>
 
-            <label class="flex items-center justify-between p-3 border border-zinc-200/80 dark:border-zinc-800 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors">
+            <label class="flex items-center justify-between p-3 border border-[#222] bg-[#0d0d0d] hover:border-[#444] cursor-pointer transition-colors">
               <div class="flex items-center gap-3">
-                <input type="checkbox" id="chkPreSession" class="w-4 h-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 dark:focus:ring-white">
+                <input type="checkbox" id="chkPreSession" class="w-4 h-4 bg-black border border-[#444] accent-[#c6ff00]">
                 <div>
-                  <div class="text-xs sm:text-sm font-medium text-zinc-900 dark:text-white">Mini-ședință portret înainte de petrecere</div>
-                  <div class="text-[11px] text-zinc-500">Cadre portret dedicate cu sărbătoritul/a (aprox. 45 min)</div>
+                  <div class="text-xs font-bold uppercase text-[#e8e6e1]">MINI-ȘEDINȚĂ PORTRET ÎNAINTE DE PETRECERE</div>
+                  <div class="text-[10px] text-[#777] uppercase">SESIUNE DEDICATĂ CU SĂRBĂTORITUL/A (~45 MIN)</div>
                 </div>
               </div>
-              <span class="font-mono text-xs font-semibold text-zinc-900 dark:text-white">+150 lei</span>
+              <span class="font-mono text-xs font-bold text-[#c6ff00]">+150 LEI</span>
             </label>
           </div>
         </div>
 
       </div>
 
-      <!-- Dreapta: Rezumat & Checkout (5 coloane Sticky pe desktop) -->
-      <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-4">
-
-        <!-- Card Rezumat Preț -->
-        <div class="bg-zinc-900 text-white dark:bg-zinc-900 dark:border dark:border-zinc-800 rounded-2xl p-6 shadow-lg">
-          <span class="text-xs font-mono uppercase tracking-wider text-zinc-400 block mb-2">Total estimat</span>
+      <!-- DREAPTA: TOTAL & CHECKOUT DIRECT (5 coloane Sticky) -->
+      <div class="lg:col-span-5 bg-[#0e0e0e] flex flex-col justify-between p-6 sm:p-8">
+        <div>
+          <span class="text-[10px] text-[#777] uppercase tracking-widest block mb-2">SUMAR ESTIMARE OFICIALĂ</span>
           
-          <div class="flex items-baseline gap-2 mb-6">
-            <span id="txtGrandTotal" class="text-4xl sm:text-5xl font-extrabold font-mono tracking-tight text-white">600</span>
-            <span class="text-xl font-bold font-mono text-zinc-400">LEI</span>
+          <div class="border-b border-[#222] pb-6 mb-6">
+            <div class="text-[10px] text-[#888] uppercase mb-1">TOTAL DE PLATĂ ESTIMAT</div>
+            <div class="flex items-baseline gap-3">
+              <span id="txtGrandTotal" class="font-mono text-6xl sm:text-7xl font-extrabold text-[#c6ff00] tracking-tight">600</span>
+              <span class="font-mono text-2xl font-bold text-[#e8e6e1]">LEI</span>
+            </div>
+            <div class="text-[10px] text-[#666] uppercase mt-1 font-mono">
+              FORMULA: 200 + 80*(ORE-1) + 5*MAX(0, PERS-30) + DEPLASARE + EXTRA
+            </div>
           </div>
 
-          <!-- Breakdown curat -->
-          <div class="space-y-2 text-xs font-mono pt-4 border-t border-zinc-800 text-zinc-300">
+          <!-- Formula Breakdown -->
+          <div class="space-y-2.5 text-xs font-mono text-[#aaa] border-b border-[#222] pb-6 mb-6">
             <div class="flex justify-between">
-              <span class="text-zinc-400">Tarif bază (prima oră):</span>
-              <span class="text-white font-medium">200 lei</span>
+              <span>PRIMA ORĂ (BAZĂ):</span>
+              <span class="text-[#e8e6e1] font-bold">200 LEI</span>
             </div>
             <div class="flex justify-between">
-              <span id="lblHoursExtraFormula" class="text-zinc-400">Ore suplimentare (5 × 80):</span>
-              <span id="valHoursExtraFormula" class="text-white font-medium">400 lei</span>
+              <span id="lblHoursExtraFormula">ORE SUPLIMENTARE:</span>
+              <span id="valHoursExtraFormula" class="text-[#e8e6e1] font-bold">400 LEI</span>
             </div>
             <div class="flex justify-between">
-              <span id="lblGuestsExtraFormula" class="text-zinc-400">Persoane peste 30:</span>
-              <span id="valGuestsExtraFormula" class="text-white font-medium">0 lei</span>
+              <span id="lblGuestsExtraFormula">INVITAȚI PESTE 30:</span>
+              <span id="valGuestsExtraFormula" class="text-[#e8e6e1] font-bold">0 LEI</span>
             </div>
             <div id="rowTransportSummary" class="flex justify-between">
-              <span id="lblTransportSummary" class="text-zinc-400">Deplasare:</span>
-              <span id="valTransportFormula" class="text-white font-medium">UBER</span>
+              <span id="lblTransportSummary">DEPLASARE:</span>
+              <span id="valTransportFormula" class="text-[#e8e6e1] font-bold">UBER</span>
             </div>
             <div id="rowAddonsSummary" class="flex justify-between hidden">
-              <span id="lblAddonsSummary" class="text-zinc-400">Opțiuni adiționale:</span>
-              <span id="valAddonsFormula" class="text-white font-medium">0 lei</span>
+              <span id="lblAddonsSummary">OPȚIUNI SUPLIMENTARE:</span>
+              <span id="valAddonsFormula" class="text-[#e8e6e1] font-bold">0 LEI</span>
             </div>
           </div>
 
-          <!-- Call to action buttons -->
-          <div class="mt-6 pt-5 border-t border-zinc-800 space-y-2.5">
-            <a id="btnSendWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
-               class="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-[0.99] text-white text-xs sm:text-sm font-medium rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm">
-              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-              </svg>
-              <span>Trimite solicitare pe WhatsApp</span>
-            </a>
-
-            <button id="btnCopyText" type="button"
-                    class="w-full py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-xs font-medium rounded-xl transition-all flex items-center justify-center gap-2">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span>Copiază detaliile ofertei</span>
-            </button>
+          <!-- Ce e inclus standard -->
+          <div class="text-[11px] text-[#777] uppercase space-y-1.5 font-mono mb-6">
+            <div class="text-[#e8e6e1] font-bold mb-1">PACHETUL INCLUDE OBLIGATORIU:</div>
+            <div>&bull; TOATE CADRELE REUȘITE EDITATE PROFESIONAL</div>
+            <div>&bull; GALERIE ONLINE PRIVATĂ SECURIZATĂ (3 LUNI)</div>
+            <div>&bull; REZOLUȚIE MAXIMĂ PENTRU PRINT ȘI SOCIAL MEDIA</div>
+            <div>&bull; TERMEN STANDARD: 7-14 ZILE LUCRĂTOARE</div>
           </div>
         </div>
 
-        <!-- Ce include pachetul -->
-        <div class="bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 text-xs text-zinc-600 dark:text-zinc-400 space-y-2">
-          <div class="font-medium text-zinc-900 dark:text-white mb-1">Standard în orice pachet:</div>
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Toate fotografiile editate profesional</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Galerie online privată securizată (3 luni)</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Fișiere la rezoluție maximă pentru print</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="text-emerald-500 font-bold">✓</span>
-            <span>Termen predare: 7-14 zile lucrătoare</span>
-          </div>
-        </div>
+        <!-- Action CTAs -->
+        <div class="space-y-3 pt-6 border-t border-[#222]">
+          <a id="btnSendWhatsapp" href="#" target="_blank" rel="noopener noreferrer" 
+             class="btn-brutalist-accent w-full text-xs py-4 flex items-center justify-center gap-2">
+            <span>TRIMITE DETALIILE PE WHATSAPP</span>
+            <span>&rarr;</span>
+          </a>
 
+          <button id="btnCopyText" type="button" 
+                  class="btn-brutalist w-full text-xs py-3 flex items-center justify-center gap-2">
+            <span>COPIAZĂ CALCULUL COMPLET</span>
+          </button>
+        </div>
       </div>
 
     </div>
+  </section>
 
-    <!-- Secțiunea Galerie Foto Minimalistă -->
-    <section class="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
-      <div class="flex items-baseline justify-between mb-6">
-        <div>
-          <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">Portofoliu recent</h2>
-          <p class="text-xs text-zinc-500 mt-0.5">Cadre reale realizate la evenimente</p>
-        </div>
-        <a href="https://www.instagram.com/photosby_dodo/" target="_blank" rel="noopener noreferrer" 
-           class="text-xs text-zinc-900 dark:text-white font-medium hover:underline">
-          Instagram @photosby_dodo &rarr;
-        </a>
+  <!-- ARHIVĂ FOTO: ASYMMETRIC CONTACT SHEET GALLERY -->
+  <section id="galerie" class="w-full bg-[#0a0a0a] border-b border-[#222222]">
+    
+    <div class="px-4 sm:px-8 py-5 border-b border-[#222222] flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+      <div>
+        <span class="text-[10px] text-[#c6ff00] uppercase font-mono block">ARHIVĂ CADRE // 2026</span>
+        <h2 class="font-display text-4xl sm:text-5xl text-[#e8e6e1] tracking-tight">CONTACT SHEET.</h2>
+      </div>
+      <div class="text-xs text-[#777] uppercase font-mono">
+        HOVER / TAP PENTRU CULOARE &bull; CLICK PENTRU FULLSCREEN
+      </div>
+    </div>
+
+    <!-- Contact Sheet Asymmetric Grid (No Gap, 1px Borders) -->
+    <div class="contact-sheet">
+      <!-- Img 1: Portrait (col 1-3, row 1-2) -->
+      <div class="contact-cell col-span-6 sm:col-span-3 row-span-2 aspect-[3/4] gallery-item" data-index="0" data-src="assets/gallery/photo-1.jpg">
+        <img src="assets/gallery/photo-1.jpg" alt="Foto 1" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">01 // RAW</span>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-1.jpg">
-          <img src="assets/gallery/photo-1.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-2.jpg">
-          <img src="assets/gallery/photo-2.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-3.jpg">
-          <img src="assets/gallery/photo-3.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-4.jpg">
-          <img src="assets/gallery/photo-4.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-5.jpg">
-          <img src="assets/gallery/photo-5.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-6.jpg">
-          <img src="assets/gallery/photo-6.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-7.jpg">
-          <img src="assets/gallery/photo-7.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
-        <div class="gallery-card group relative aspect-[3/4] rounded-xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 cursor-pointer border border-zinc-200/60 dark:border-zinc-800 gallery-item" data-src="assets/gallery/photo-8.jpg">
-          <img src="assets/gallery/photo-8.jpg" alt="Foto Majorat" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-        </div>
+      <!-- Img 4: Landscape Heroic (col 4-9, row 1-2) -->
+      <div class="contact-cell col-span-12 sm:col-span-6 row-span-2 aspect-[3/2] gallery-item" data-index="3" data-src="assets/gallery/photo-4.jpg">
+        <img src="assets/gallery/photo-4.jpg" alt="Foto 4" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">02 // WIDE</span>
       </div>
-    </section>
 
-  </main>
+      <!-- Img 2: Portrait (col 10-12, row 1-2) -->
+      <div class="contact-cell col-span-6 sm:col-span-3 row-span-2 aspect-[3/4] gallery-item" data-index="1" data-src="assets/gallery/photo-2.jpg">
+        <img src="assets/gallery/photo-2.jpg" alt="Foto 2" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">03 // CROWD</span>
+      </div>
 
-  <!-- Modal Lightbox -->
-  <div id="galleryLightbox" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden opacity-0 flex items-center justify-center p-4 transition-opacity duration-200">
-    <button id="btnCloseLightbox" class="absolute top-5 right-5 text-white/70 hover:text-white p-2 text-xl font-light cursor-pointer">
-      ✕
-    </button>
-    <img id="lightboxImage" src="" alt="Previzualizare Foto" class="max-h-[85vh] max-w-[90vw] object-contain rounded-xl shadow-2xl">
+      <!-- Img 3: Portrait (col 1-4) -->
+      <div class="contact-cell col-span-6 sm:col-span-4 aspect-[3/4] gallery-item" data-index="2" data-src="assets/gallery/photo-3.jpg">
+        <img src="assets/gallery/photo-3.jpg" alt="Foto 3" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">04 // LIGHTS</span>
+      </div>
+
+      <!-- Img 5: Portrait (col 5-8) -->
+      <div class="contact-cell col-span-6 sm:col-span-4 aspect-[3/4] gallery-item" data-index="4" data-src="assets/gallery/photo-5.jpg">
+        <img src="assets/gallery/photo-5.jpg" alt="Foto 5" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">05 // DETAIL</span>
+      </div>
+
+      <!-- Img 6: Portrait (col 9-12) -->
+      <div class="contact-cell col-span-12 sm:col-span-4 aspect-[3/4] gallery-item" data-index="5" data-src="assets/gallery/photo-6.jpg">
+        <img src="assets/gallery/photo-6.jpg" alt="Foto 6" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">06 // MOMENT</span>
+      </div>
+
+      <!-- Img 7: Landscape Wide (col 1-6) -->
+      <div class="contact-cell col-span-12 sm:col-span-6 aspect-[3/2] gallery-item" data-index="6" data-src="assets/gallery/photo-7.jpg">
+        <img src="assets/gallery/photo-7.jpg" alt="Foto 7" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">07 // ACTION</span>
+      </div>
+
+      <!-- Img 8: Landscape Wide (col 7-12) -->
+      <div class="contact-cell col-span-12 sm:col-span-6 aspect-[3/2] gallery-item" data-index="7" data-src="assets/gallery/photo-8.jpg">
+        <img src="assets/gallery/photo-8.jpg" alt="Foto 8" loading="lazy" class="contact-img">
+        <div class="grain-overlay"></div>
+        <span class="absolute bottom-2 left-2 text-[9px] font-mono text-[#888] bg-black px-1 uppercase">08 // FINALE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX MODAL: FULL SCREEN, MONO COUNTER, ESC/SWIPE/PRELOAD -->
+  <div id="lightboxModal" class="fixed inset-0 z-50 hidden flex flex-col justify-between p-4 sm:p-8 select-none">
+    <!-- Top Bar: Counter & Close -->
+    <div class="flex items-center justify-between z-10">
+      <div id="lightboxCounter" class="text-xs font-mono font-bold text-[#c6ff00] uppercase tracking-wider">
+        01 / 08
+      </div>
+      <button id="btnCloseLightbox" class="btn-brutalist text-xs py-1 px-3">
+        ÎNCHIDE [ESC]
+      </button>
+    </div>
+
+    <!-- Center Image Container -->
+    <div class="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
+      <img id="lightboxImage" src="" alt="Fullscreen View" class="max-h-[85vh] max-w-[92vw] object-contain border border-[#222]">
+    </div>
+
+    <!-- Bottom Bar: Controls -->
+    <div class="flex items-center justify-between text-xs z-10">
+      <button id="btnPrevLightbox" class="btn-brutalist py-2 px-4 uppercase">
+        &larr; PREV
+      </button>
+      <span class="text-[10px] text-[#666] uppercase hidden sm:inline font-mono">
+        TASTELE SĂGEȚI STÂNGA/DREAPTA &bull; SWIPE PE TELEFON
+      </span>
+      <button id="btnNextLightbox" class="btn-brutalist py-2 px-4 uppercase">
+        NEXT &rarr;
+      </button>
+    </div>
   </div>
 
-  <!-- Footer Minimalist -->
-  <footer class="border-t border-zinc-200 dark:border-zinc-800 py-6 bg-white dark:bg-zinc-900 text-center text-xs text-zinc-500 transition-colors">
-    <p>© 2026 Photos by Dodo • <a href="https://www.instagram.com/photosby_dodo/" target="_blank" class="hover:text-zinc-900 dark:hover:text-white transition-colors">@photosby_dodo</a></p>
+  <!-- STICKY MOBILE BOTTOM BAR (Solid Black, Border Top, Safe Area Bottom) -->
+  <aside class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-[#000] border-t-2 border-[#222] px-4 py-3 flex items-center justify-between" style="padding-bottom: calc(0.75rem + var(--safe-bottom));">
+    <div>
+      <div class="text-[9px] text-[#777] uppercase font-mono">TOTAL ESTIMAT:</div>
+      <div class="font-mono text-xl font-bold text-[#c6ff00] leading-none">
+        <span id="txtMobileTotal">600</span> LEI
+      </div>
+    </div>
+    <a id="btnMobileWhatsapp" href="#" target="_blank" rel="noopener noreferrer" 
+       class="btn-brutalist-accent text-[11px] py-2.5 px-4 uppercase font-bold shrink-0">
+      TRIMITE WHATSAPP &rarr;
+    </a>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-[#050505] border-t border-[#222222] p-8 text-xs font-mono text-[#666] flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div>
+      © 2026 PHOTOS BY DODO. TOATE DREPTURILE REZERVATE.
+    </div>
+    <div class="flex gap-4 uppercase">
+      <a href="https://www.instagram.com/photosby_dodo/" target="_blank" class="hover:text-[#c6ff00] transition-colors">Instagram</a>
+      <span>&bull;</span>
+      <span>BUCHAREST, RO</span>
+    </div>
   </footer>
 
-  <!-- Toast -->
-  <div id="toast" class="fixed bottom-5 right-5 bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 text-xs font-medium px-4 py-2.5 rounded-xl shadow-lg opacity-0 transition-opacity duration-200 pointer-events-none z-50">
-    Detaliile au fost copiate în clipboard
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 bg-[#c6ff00] text-black text-xs font-mono font-bold px-4 py-3 border border-black opacity-0 pointer-events-none transition-opacity z-50">
+    CALCUL COPIAT ÎN CLIPBOARD!
   </div>
 
+  <!-- Scripts -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="zones.js"></script>
   <script src="app.js"></script>
