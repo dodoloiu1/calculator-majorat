@@ -348,10 +348,13 @@ document.addEventListener('DOMContentLoaded', () => {
       scrollWheelZoom: false
     });
 
-    // CartoDB Dark Matter Tiles cu atribuire oficiala
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-      maxZoom: 18
+    // OpenStreetMap tiles — no API key, no keyed provider.
+    // The dark look comes from a CSS filter on .leaflet-tile (see styles.css),
+    // so the theme stays dark without depending on CartoDB's keyed basemaps.
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      subdomains: 'abc',
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     if (typeof GEO_BOUNDARIES !== 'undefined') {

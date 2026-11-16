@@ -302,7 +302,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
 }
 
 /* ==========================================================================
-   3. HARTĂ (CartoDB Dark Matter, Leaflet Controls)
+   3. HARTĂ (OpenStreetMap tiles, Leaflet Controls)
    ========================================================================== */
 
 #mapContainer {
@@ -326,6 +326,9 @@ input[type=date]::-webkit-calendar-picker-indicator {
 
 .leaflet-tile {
   outline: 1px solid transparent !important;
+  /* OpenStreetMap tiles are light; invert them so the map matches the dark
+     theme. No keyed dark-basemap provider needed. */
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.9) saturate(0.35);
 }
 
 .leaflet-control-zoom {
