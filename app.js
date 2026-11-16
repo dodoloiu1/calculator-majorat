@@ -257,20 +257,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Toast (shared by "copiază" and by search/geocoding errors)
+  let toastTimer = null;
+  function showToast(message) {
+    if (!elToast) return;
+    elToast.textContent = message;
+    elToast.classList.remove('opacity-0');
+    elToast.classList.add('opacity-100');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      elToast.classList.remove('opacity-100');
+      elToast.classList.add('opacity-0');
+    }, 2600);
+  }
+
   // Copy Action
   if (elBtnCopyText) {
     elBtnCopyText.addEventListener('click', () => {
       const text = generateSummaryText();
-      navigator.clipboard.writeText(text).then(() => {
-        if (elToast) {
-          elToast.classList.remove('opacity-0');
-          elToast.classList.add('opacity-100');
-          setTimeout(() => {
-            elToast.classList.remove('opacity-100');
-            elToast.classList.add('opacity-0');
-          }, 2400);
-        }
-      });
+      const done = () => showToast('CALCUL COPIAT ÎN CLIPBOARD!');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, () => showToast('NU AM PUTUT COPIA. SELECTEAZĂ TEXTUL MANUAL.'));
+      } else {
+        showToast('NU AM PUTUT COPIA. SELECTEAZĂ TEXTUL MANUAL.');
+      }
     });
   }
 
@@ -351,11 +361,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // OpenStreetMap tiles — no API key, no keyed provider.
     // The dark look comes from a CSS filter on .leaflet-tile (see styles.css),
     // so the theme stays dark without depending on CartoDB's keyed basemaps.
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       subdomains: 'abc',
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    });
+
+    // Fallback: if the tile server is slow or blocked, drop the raster layer
+    // and keep the zone polygons + markers on a clean dark surface.
+    let tileErrors = 0;
+    let tilesDropped = false;
+    osmLayer.on('tileerror', () => {
+      tileErrors += 1;
+      if (!tilesDropped && tileErrors >= 5) {
+        tilesDropped = true;
+        if (map.hasLayer(osmLayer)) map.removeLayer(osmLayer);
+        if (elMap) elMap.classList.add('map-tiles-failed');
+      }
+    });
+    osmLayer.addTo(map);
 
     if (typeof GEO_BOUNDARIES !== 'undefined') {
       // Poligoane stricte 1px: Bucuresti = --accent (#c6ff00), Ilfov = --fg (#e8e6e1)
@@ -395,7 +419,157 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1000);
   }
 
-  // Search Address
+  // --- ADDRESS AUTOCOMPLETE -------------------------------------------------
+  // Photon (structured OSM results, no key) with Nominatim as fallback.
+  // Google-style behaviour: suggestions as you type, arrows + Enter, Escape.
+  const elSuggestions = document.getElementById('addressSuggestions');
+  let suggestSeq = 0;
+  let suggestAbort = null;
+  let suggestTimer = null;
+  let activeSuggestion = -1;
+  let currentSuggestions = [];
+
+  function closeSuggestions() {
+    if (!elSuggestions) return;
+    elSuggestions.hidden = true;
+    elSuggestions.innerHTML = '';
+    currentSuggestions = [];
+    activeSuggestion = -1;
+    if (elInputSearchAddress) elInputSearchAddress.setAttribute('aria-expanded', 'false');
+  }
+
+  function renderSuggestions(items) {
+    if (!elSuggestions) return;
+    elSuggestions.innerHTML = '';
+
+    // Drop exact duplicates (the geocoders return the same street several times)
+    const seen = new Set();
+    const unique = items.filter((item) => {
+      const key = `${item.label}|${item.hint}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    currentSuggestions = unique;
+    activeSuggestion = -1;
+
+    if (!items.length) {
+      closeSuggestions();
+      return;
+    }
+
+    items.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.className = 'suggestion';
+      li.id = `suggestion-${i}`;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', 'false');
+
+      const title = document.createElement('span');
+      title.className = 'suggestion-title';
+      title.textContent = item.label;
+
+      const hint = document.createElement('span');
+      hint.className = 'suggestion-hint';
+      hint.textContent = item.hint;
+
+      li.append(title, hint);
+      li.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        pickSuggestion(i);
+      });
+      elSuggestions.appendChild(li);
+    });
+
+    elSuggestions.hidden = false;
+    if (elInputSearchAddress) elInputSearchAddress.setAttribute('aria-expanded', 'true');
+  }
+
+  function highlightSuggestion(index) {
+    if (!elSuggestions) return;
+    const count = currentSuggestions.length;
+    if (!count) return;
+    const next = (index + count) % count;
+    [...elSuggestions.children].forEach((li, i) => {
+      li.classList.toggle('is-active', i === next);
+      li.setAttribute('aria-selected', String(i === next));
+    });
+    activeSuggestion = next;
+    if (elInputSearchAddress) elInputSearchAddress.setAttribute('aria-activedescendant', `suggestion-${next}`);
+  }
+
+  function pickSuggestion(index) {
+    const item = currentSuggestions[index];
+    if (!item) return;
+    if (elInputSearchAddress) elInputSearchAddress.value = item.label;
+    closeSuggestions();
+    handleLocationSelected(item.lat, item.lon, item.label.toUpperCase());
+  }
+
+  async function fetchSuggestions(query) {
+    const seq = ++suggestSeq;
+    if (suggestAbort) suggestAbort.abort();
+
+    // 1) Photon — GeoJSON, structured fields, no API key
+    try {
+      suggestAbort = new AbortController();
+      const res = await fetch(
+        `https://photon.komoot.io/api/?limit=6&lang=ro&q=${encodeURIComponent(query)}`,
+        { signal: suggestAbort.signal, headers: { Accept: 'application/json' } }
+      );
+      if (!res.ok) throw new Error(`photon ${res.status}`);
+      const data = await res.json();
+      if (seq !== suggestSeq) return;
+
+      const items = (data.features || [])
+        .map((f) => {
+          const p = f.properties || {};
+          const coords = (f.geometry && f.geometry.coordinates) || [];
+          return {
+            lat: coords[1],
+            lon: coords[0],
+            label: p.name || p.city || p.state || p.country || '',
+            hint: [p.city || p.state, p.country].filter(Boolean).join(', ')
+          };
+        })
+        .filter((i) => i.label && typeof i.lat === 'number');
+
+      if (items.length) {
+        renderSuggestions(items);
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+    }
+
+    // 2) Fallback: Nominatim
+    try {
+      suggestAbort = new AbortController();
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=ro&limit=6&accept-language=ro&q=${encodeURIComponent(query)}`,
+        { signal: suggestAbort.signal }
+      );
+      if (!res.ok) throw new Error(`nominatim ${res.status}`);
+      const data = await res.json();
+      if (seq !== suggestSeq) return;
+
+      renderSuggestions((data || []).map((d) => {
+        const parts = (d.display_name || '').split(',');
+        return {
+          lat: parseFloat(d.lat),
+          lon: parseFloat(d.lon),
+          label: parts[0] || '',
+          hint: parts.slice(1, 3).join(',').trim()
+        };
+      }));
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+      if (seq === suggestSeq) closeSuggestions();
+    }
+  }
+
+  // Explicit search (button / Enter) — best-effort, never blocks the zone select
   async function searchAddress() {
     const query = elInputSearchAddress ? elInputSearchAddress.value.trim() : '';
     if (!query) return;
@@ -404,22 +578,24 @@ document.addEventListener('DOMContentLoaded', () => {
       elBtnSearchAddress.textContent = '...';
       elBtnSearchAddress.disabled = true;
     }
+    closeSuggestions();
 
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=ro&q=${encodeURIComponent(query + ' Romania')}`);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&countrycodes=ro&limit=1&accept-language=ro&q=${encodeURIComponent(query + ' Romania')}`
+      );
+      if (!response.ok) throw new Error(`http ${response.status}`);
       const data = await response.json();
 
       if (data && data.length > 0) {
         const place = data[0];
-        const lat = parseFloat(place.lat);
-        const lon = parseFloat(place.lon);
         const shortName = place.display_name.split(',').slice(0, 2).join(',');
-        handleLocationSelected(lat, lon, shortName.toUpperCase());
+        handleLocationSelected(parseFloat(place.lat), parseFloat(place.lon), shortName.toUpperCase());
       } else {
-        alert('ADRESA NU A FOST GĂSITĂ. SELECTEAZĂ ZONA DIRECT DIN LISTĂ SAU FĂ CLICK PE HARTĂ.');
+        showToast('ADRESA NU A FOST GĂSITĂ. ALEGE ZONA DIN LISTĂ.');
       }
     } catch (err) {
-      alert('EROARE LA CĂUTARE. SELECTEAZĂ ZONA DIN MENIU.');
+      showToast('CĂUTAREA A EȘUAT. ALEGE ZONA DIN LISTĂ.');
     } finally {
       if (elBtnSearchAddress) {
         elBtnSearchAddress.textContent = 'CAUTĂ';
@@ -429,14 +605,53 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (elBtnSearchAddress) elBtnSearchAddress.addEventListener('click', searchAddress);
+
   if (elInputSearchAddress) {
+    elInputSearchAddress.addEventListener('input', () => {
+      const q = elInputSearchAddress.value.trim();
+      clearTimeout(suggestTimer);
+      if (q.length < 3) {
+        closeSuggestions();
+        return;
+      }
+      suggestTimer = setTimeout(() => fetchSuggestions(q), 250);
+    });
+
     elInputSearchAddress.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+      if (!elSuggestions || elSuggestions.hidden) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          searchAddress();
+        }
+        return;
+      }
+      if (e.key === 'ArrowDown') {
         e.preventDefault();
-        searchAddress();
+        highlightSuggestion(activeSuggestion + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        highlightSuggestion(activeSuggestion - 1);
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeSuggestion >= 0) pickSuggestion(activeSuggestion);
+        else searchAddress();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeSuggestions();
       }
     });
+
+    elInputSearchAddress.addEventListener('blur', () => {
+      // mousedown on an option already preventDefault's, so a plain delay is enough
+      setTimeout(closeSuggestions, 120);
+    });
   }
+
+  document.addEventListener('click', (e) => {
+    if (!elSuggestions || elSuggestions.hidden) return;
+    if (e.target && e.target.closest && e.target.closest('.search-field')) return;
+    closeSuggestions();
+  });
 
   // --- DYNAMIC RATIO DETECTION & ASYMMETRIC GRID SPANS ---
   function initGalleryRatio() {
@@ -504,12 +719,18 @@ document.addEventListener('DOMContentLoaded', () => {
     preloadImage(nextIdx);
   }
 
-  function openLightbox(index) {
+  let lastFocused = null;
+  const LIGHTBOX_FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+  function openLightbox(index, trigger) {
     currentLightboxIndex = parseInt(index, 10) || 0;
     updateLightboxView();
     if (elModal) {
+      lastFocused = trigger || document.activeElement;
       elModal.classList.remove('hidden');
       document.body.classList.add('scroll-locked');
+      // Move focus into the dialog so keyboard and screen-reader users land there
+      if (elBtnClose) elBtnClose.focus();
     }
   }
 
@@ -517,6 +738,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elModal) {
       elModal.classList.add('hidden');
       document.body.classList.remove('scroll-locked');
+      // Return focus to the thumbnail that opened the dialog
+      if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      lastFocused = null;
     }
   }
 
@@ -531,9 +755,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.querySelectorAll('.gallery figure').forEach(item => {
-    item.addEventListener('click', () => {
-      const idx = item.getAttribute('data-index');
-      openLightbox(idx);
+    const open = () => openLightbox(item.getAttribute('data-index'), item);
+    item.addEventListener('click', open);
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
     });
   });
 
@@ -541,12 +769,27 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elBtnNext) elBtnNext.addEventListener('click', nextLightbox);
   if (elBtnPrev) elBtnPrev.addEventListener('click', prevLightbox);
 
-  // Keyboard navigation
+  // Keyboard navigation + focus trap
   document.addEventListener('keydown', (e) => {
     if (!elModal || elModal.classList.contains('hidden')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') nextLightbox();
-    if (e.key === 'ArrowLeft') prevLightbox();
+
+    if (e.key === 'Escape') { closeLightbox(); return; }
+    if (e.key === 'ArrowRight') { nextLightbox(); return; }
+    if (e.key === 'ArrowLeft') { prevLightbox(); return; }
+
+    if (e.key === 'Tab') {
+      const nodes = elModal.querySelectorAll(LIGHTBOX_FOCUSABLE);
+      if (!nodes.length) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
 
   // Touch swipe support on modal

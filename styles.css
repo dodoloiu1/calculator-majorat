@@ -514,3 +514,141 @@ body.scroll-locked {
   font-size: 11px;
   font-weight: 700;
 }
+
+/* ==========================================================================
+   7. AUTOCOMPLETE SUGGESTIONS
+   ========================================================================== */
+
+.search-field {
+  position: relative;
+  display: grid;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #222222;
+  cursor: pointer;
+}
+
+.suggestion:last-child {
+  border-bottom: none;
+}
+
+.suggestion-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--fg);
+}
+
+.suggestion-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.suggestion.is-active,
+.suggestion:hover {
+  background: var(--fg);
+}
+
+.suggestion.is-active .suggestion-title,
+.suggestion:hover .suggestion-title {
+  color: var(--bg);
+}
+
+.suggestion.is-active .suggestion-hint,
+.suggestion:hover .suggestion-hint {
+  color: #333333;
+}
+
+/* ==========================================================================
+   8. MAP FALLBACK (raster tiles unavailable)
+   ========================================================================== */
+
+#map.map-tiles-failed {
+  background: #0d0d0d;
+}
+
+/* ==========================================================================
+   9. FAQ
+   ========================================================================== */
+
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 18px 24px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--fg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  font-size: 18px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.faq-item[open] summary::after {
+  content: "\2212";
+}
+
+.faq-item summary:hover {
+  background: #141414;
+}
+
+.faq-item p {
+  padding: 0 24px 18px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 70ch;
+}
+
+/* Gallery items act as buttons — give them the same focus ring */
+.gallery > *:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  z-index: 2;
+}

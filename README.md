@@ -1,7 +1,7 @@
 # 📸 Calculator Foto Majorat • Photos by Dodo
 
 > Calculator simplu, transparent și rapid pentru servicii foto de majorat.
-> Paletă de culori curată: **Alb**, **Gri**, **Navy Blue**.
+> Temă brutalistă întunecată: **negru**, **gri**, **verde lime**.
 
 [![Instagram](https://img.shields.io/badge/Instagram-@photosby__dodo-1e3a8a?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/photosby_dodo/)
 [![Live Demo](https://img.shields.io/badge/Demo-Live%20Website-1e3a8a?style=for-the-badge)](https://dodoloiu1.github.io/calculator-majorat/)
@@ -40,10 +40,35 @@ $$\text{PREȚ} = 200 + 80 \times (\text{ORE} - 1) + 5 \times \max(0, \text{PERSO
 
 ---
 
-## 🚀 Funcționalități Noi (v2)
+## 🚀 Funcționalități
 
-- **Trimitere directă pe WhatsApp:** Clientul poate trimite calculul precompletat dintr-un singur click.
-- **Selector opțional de dată:** Pentru verificarea rapidă a disponibilității fotografului.
-- **Protecție la intervale invalide:** Validare la selectarea aceleiași ore de început și final.
-- **Opțiuni suplimentare (Add-ons):** Posibilitate de adăugare livrare urgentă, stick USB sau mini-ședință portret.
-- **Open Graph Social Card:** Preview optimizat pentru distribuire pe rețele sociale.
+- **Trimitere directă pe WhatsApp:** clientul trimite calculul precompletat dintr-un singur click.
+- **Autocomplete de adresă:** sugestii live (Photon/OSM, cu fallback Nominatim) — săgeți + Enter + Escape.
+- **Hartă interactivă fără cheie API:** OpenStreetMap + Leaflet, cu delimitare automată a zonei de preț.
+- **Fallback la hartă:** dacă serverul de tile-uri răspunde greu sau e blocat, harta trece pe o suprafață curată, iar zonele și markerul rămân.
+- **Galerie cu lightbox:** navigare din tastatură, focus trap, închidere cu Escape, swipe pe mobil.
+- **SEO complet:** meta description orientată serviciu, Open Graph + Twitter Card, canonical, JSON-LD `LocalBusiness` și `FAQPage`, imagine OG dedicată 1200×630.
+- **Secțiune FAQ:** întrebări frecvente cu accordeon nativ și structură `FAQPage`.
+- **Protecție la intervale invalide:** validare la selectarea aceleiași ore de început și final.
+- **Opțiuni suplimentare (add-on):** predare rapidă 24–48h (+200 lei), mini-ședință portret (+150 lei).
+
+---
+
+## 🧭 Zone & Prețuri
+
+| Zonă | Cost |
+|---|---|
+| București (în oraș) | Uber decontat de client, la final |
+| Zona 1 — Ilfov apropiat | +60 lei |
+| Zona 2 — Ilfov exterior | +100 lei |
+| Zona 3 — peste 35 km | +150 lei |
+
+---
+
+## 📦 Deploy
+
+Live pe GitHub Pages, ramura `main`: https://dodoloiu1.github.io/calculator-majorat/
+
+## 📞 Contact
+
+WhatsApp: **+40 736 195 520** · Instagram: [@photosby_dodo](https://www.instagram.com/photosby_dodo/)
