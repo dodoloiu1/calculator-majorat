@@ -67,7 +67,9 @@ $$\text{PREȚ} = 200 + 80 \times (\text{ORE} - 1) + 5 \times \max(0, \text{PERSO
 
 ## 📦 Deploy
 
-Live pe GitHub Pages, ramura `main`: https://dodoloiu1.github.io/calculator-majorat/
+Live pe GitHub Pages (ramura `main`, prin `.github/workflows/deploy.yml`): https://dodoloiu1.github.io/calculator-majorat/
+
+Imaginile sunt servite în **WebP** cu fallback JPG (`<picture>` + `srcset`). Hostul unic este GitHub Pages — configul Vercel a fost eliminat ca să nu existe două surse de adevăr.
 
 ## 📞 Contact
 

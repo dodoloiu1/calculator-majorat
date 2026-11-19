@@ -25,15 +25,34 @@ html {
   scroll-behavior: smooth;
 }
 
-* {
+/* Reset base */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
+}
+
+* {
   margin: 0;
   padding: 0;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  transition-duration: 100ms !important;
+}
+
+/* Brutalist invariants, scoped to our own chrome instead of every node. */
+button,
+input,
+select,
+textarea,
+summary,
+.btn-step,
+.btn-search,
+.btn-brutalist-accent,
+.btn-whatsapp-stacked,
+.btn-copy-stacked,
+.native-checkbox,
+.suggestions,
+#toast {
+  border-radius: 0;
+  box-shadow: none;
 }
 
 body {
@@ -43,6 +62,24 @@ body {
   -webkit-tap-highlight-color: transparent;
   overflow-x: hidden;
   padding-bottom: 0;
+}
+
+/* Hero <picture> must not create a box (img stays absolutely positioned). */
+.hero-picture {
+  display: contents;
+}
+
+/* Shown only when JavaScript is disabled. */
+.noscript-note {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--line);
+  background: #141414;
+  color: var(--fg);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.noscript-note a {
+  color: var(--accent);
 }
 
 @media (max-width: 1023px) {
@@ -437,59 +474,63 @@ input[type=date]::-webkit-calendar-picker-indicator {
 }
 
 /* ==========================================================================
-   5. GALERIE „POZE” (Dense Grid Asimetric)
+   5. GALERIE „POZE” (Masonry — every frame visible, responsive)
    ========================================================================== */
 
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-auto-rows: 260px;
-  grid-auto-flow: dense;
-  gap: 0;
+  columns: 4;
+  column-gap: 6px;
   width: 100%;
-  justify-items: stretch;
-  align-items: stretch;
-  border-top: 1px solid var(--line);
-  border-left: 1px solid var(--line);
 }
 
-.gallery > * {
-  margin: 0;
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
+.gallery figure {
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 0 0 6px;
   position: relative;
-  width: auto;
-  min-width: 0;
+  display: block;
+  overflow: hidden;
+}
+
+.gallery picture {
+  display: block;
 }
 
 .gallery img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   max-width: none;
   object-fit: cover;
   filter: grayscale(1) contrast(1.15);
   cursor: zoom-in;
+  transition: filter 200ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.gallery > *:hover img,
-.gallery > *:focus-within img {
+.gallery figure:hover img,
+.gallery figure:focus-within img {
   filter: none;
+  transform: scale(1.02);
 }
 
-.gallery .landscape {
-  grid-column: span 2;
-}
-
-.gallery .portrait {
-  grid-row: span 2;
+@media (max-width: 1000px) {
+  .gallery {
+    columns: 3;
+    column-gap: 4px;
+  }
+  .gallery figure {
+    margin-bottom: 4px;
+  }
 }
 
 @media (max-width: 700px) {
   .gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 180px;
+    columns: 2;
+    column-gap: 4px;
+  }
+  .gallery figure {
+    margin-bottom: 4px;
   }
 }
 
@@ -651,4 +692,31 @@ body.scroll-locked {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
   z-index: 2;
+}
+
+/* ==========================================================================
+   10. MOTION & THIRD-PARTY POLISH
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Leaflet ships rounded controls with shadows; keep them brutalist. */
+.leaflet-container,
+.leaflet-control,
+.leaflet-bar,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }

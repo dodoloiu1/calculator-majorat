@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
+  <!-- BASE URL: https://dodoloiu1.github.io/calculator-majorat/  (change canonical, OG, Twitter + JSON-LD below if the domain changes) -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Photos by Dodo — Fotograf Majorat București & Ilfov | Estimator Preț</title>
@@ -113,8 +114,35 @@
     ]
   }
   </script>
+  <!-- Structured data: service offer -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": "Fotografie de majorat",
+    "provider": { "@type": "LocalBusiness", "name": "Photos by Dodo", "telephone": "+40 736 195 520" },
+    "areaServed": [
+      { "@type": "City", "name": "București" },
+      { "@type": "AdministrativeArea", "name": "Ilfov" }
+    ],
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "RON",
+      "priceRange": "200-600",
+      "availability": "https://schema.org/InStock",
+      "url": "https://dodoloiu1.github.io/calculator-majorat/"
+    }
+  }
+  </script>
+
 </head>
 <body class="bg-[#0a0a0a] text-[#e8e6e1] font-mono selection:bg-[#c6ff00] selection:text-black min-h-screen">
+
+  <noscript>
+    <div class="noscript-note">
+      Calculatorul are nevoie de JavaScript. Scrie-ne direct pe <a href="https://wa.me/40736195520" target="_blank" rel="noopener noreferrer">WhatsApp: +40 736 195 520</a>.
+    </div>
+  </noscript>
 
   <!-- TOP HEADER STRIP -->
   <header class="border-b border-[#222222] bg-[#0a0a0a] sticky top-0 z-40">
@@ -139,10 +167,10 @@
   <!-- HERO SECTION: RESTAURAT EXACT DIN PRIMUL REDESIGN (COMMIT 335249a) -->
   <section class="relative w-full min-h-[85vh] sm:min-h-[90vh] border-b border-[#222222] flex flex-col justify-between overflow-hidden bg-[#000]">
     <!-- Background Full Bleed Photo (Hero image priority loading) -->
-    <img src="assets/gallery/photo-4.jpg" 
-         alt="Majorat Photos by Dodo" 
-         fetchpriority="high"
-         class="absolute inset-0 w-full h-full object-cover object-center filter grayscale contrast-125 brightness-75 opacity-60">
+    <picture class="hero-picture">
+      <source type="image/webp" srcset="assets/gallery/photo-4-1200.webp 1200w, assets/gallery/photo-4.webp 1600w" sizes="100vw">
+      <img src="assets/gallery/photo-4.jpg" alt="Majorat Photos by Dodo" width="1600" height="1067" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover object-center filter grayscale contrast-125 brightness-75 opacity-60">
+    </picture>
     <div class="grain-overlay"></div>
 
     <!-- Hero Top Status Indicator -->
@@ -432,42 +460,42 @@
     <div class="gallery">
       <!-- Img 1: Portrait (1067x1600) -->
       <figure class="gallery-item portrait" data-index="0" tabindex="0" role="button" aria-label="Mărește fotografia 1 din 8">
-        <img src="assets/gallery/photo-1.jpg" alt="Foto Majorat 1" loading="lazy" decoding="async" width="1067" height="1600">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-1-800.webp 800w, assets/gallery/photo-1.webp 1067w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-1.jpg" alt="Foto Majorat 1" loading="lazy" decoding="async" width="1067" height="1600"></picture>
       </figure>
 
       <!-- Img 4: Landscape (1600x1067) -->
       <figure class="gallery-item landscape" data-index="3" tabindex="0" role="button" aria-label="Mărește fotografia 4 din 8">
-        <img src="assets/gallery/photo-4.jpg" alt="Foto Majorat 4" loading="lazy" decoding="async" width="1600" height="1067">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-4-800.webp 800w, assets/gallery/photo-4.webp 1600w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-4.jpg" alt="Foto Majorat 4" loading="lazy" decoding="async" width="1600" height="1067"></picture>
       </figure>
 
       <!-- Img 2: Portrait (1067x1600) -->
       <figure class="gallery-item portrait" data-index="1" tabindex="0" role="button" aria-label="Mărește fotografia 2 din 8">
-        <img src="assets/gallery/photo-2.jpg" alt="Foto Majorat 2" loading="lazy" decoding="async" width="1067" height="1600">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-2-800.webp 800w, assets/gallery/photo-2.webp 1067w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-2.jpg" alt="Foto Majorat 2" loading="lazy" decoding="async" width="1067" height="1600"></picture>
       </figure>
 
       <!-- Img 3: Portrait (1067x1600) -->
       <figure class="gallery-item portrait" data-index="2" tabindex="0" role="button" aria-label="Mărește fotografia 3 din 8">
-        <img src="assets/gallery/photo-3.jpg" alt="Foto Majorat 3" loading="lazy" decoding="async" width="1067" height="1600">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-3-800.webp 800w, assets/gallery/photo-3.webp 1067w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-3.jpg" alt="Foto Majorat 3" loading="lazy" decoding="async" width="1067" height="1600"></picture>
       </figure>
 
       <!-- Img 7: Landscape (1600x1067) -->
       <figure class="gallery-item landscape" data-index="6" tabindex="0" role="button" aria-label="Mărește fotografia 7 din 8">
-        <img src="assets/gallery/photo-7.jpg" alt="Foto Majorat 7" loading="lazy" decoding="async" width="1600" height="1067">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-7-800.webp 800w, assets/gallery/photo-7.webp 1600w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-7.jpg" alt="Foto Majorat 7" loading="lazy" decoding="async" width="1600" height="1067"></picture>
       </figure>
 
       <!-- Img 5: Portrait (1067x1600) -->
       <figure class="gallery-item portrait" data-index="4" tabindex="0" role="button" aria-label="Mărește fotografia 5 din 8">
-        <img src="assets/gallery/photo-5.jpg" alt="Foto Majorat 5" loading="lazy" decoding="async" width="1067" height="1600">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-5-800.webp 800w, assets/gallery/photo-5.webp 1067w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-5.jpg" alt="Foto Majorat 5" loading="lazy" decoding="async" width="1067" height="1600"></picture>
       </figure>
 
       <!-- Img 8: Landscape (1600x1067) -->
       <figure class="gallery-item landscape" data-index="7" tabindex="0" role="button" aria-label="Mărește fotografia 8 din 8">
-        <img src="assets/gallery/photo-8.jpg" alt="Foto Majorat 8" loading="lazy" decoding="async" width="1600" height="1067">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-8-800.webp 800w, assets/gallery/photo-8.webp 1600w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-8.jpg" alt="Foto Majorat 8" loading="lazy" decoding="async" width="1600" height="1067"></picture>
       </figure>
 
       <!-- Img 6: Portrait (1067x1600) -->
       <figure class="gallery-item portrait" data-index="5" tabindex="0" role="button" aria-label="Mărește fotografia 6 din 8">
-        <img src="assets/gallery/photo-6.jpg" alt="Foto Majorat 6" loading="lazy" decoding="async" width="1067" height="1600">
+        <picture><source type="image/webp" srcset="assets/gallery/photo-6-800.webp 800w, assets/gallery/photo-6.webp 1067w" sizes="(max-width:700px) 50vw, (max-width:1000px) 33vw, 25vw"><img src="assets/gallery/photo-6.jpg" alt="Foto Majorat 6" loading="lazy" decoding="async" width="1067" height="1600"></picture>
       </figure>
     </div>
   </section>

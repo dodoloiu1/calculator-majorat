@@ -237,9 +237,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (elSelectStart) elSelectStart.addEventListener('change', onDropdownChange);
   if (elSelectEnd) elSelectEnd.addEventListener('change', onDropdownChange);
 
+  // Date: no past dates. Min is today; typed past dates are rejected.
+  function todayISO() {
+    const d = new Date();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${d.getFullYear()}-${mm}-${dd}`;
+  }
+
   if (elEventDate) {
+    elEventDate.min = todayISO();
     elEventDate.addEventListener('change', (e) => {
-      state.date = e.target.value;
+      const value = e.target.value;
+      if (value && value < todayISO()) {
+        e.target.value = '';
+        state.date = '';
+        showToast('DATA NU POATE FI ÎN TRECUT.');
+        calculate();
+        return;
+      }
+      state.date = value;
       calculate();
     });
   }
@@ -454,12 +471,12 @@ document.addEventListener('DOMContentLoaded', () => {
     currentSuggestions = unique;
     activeSuggestion = -1;
 
-    if (!items.length) {
+    if (!unique.length) {
       closeSuggestions();
       return;
     }
 
-    items.forEach((item, i) => {
+    unique.forEach((item, i) => {
       const li = document.createElement('li');
       li.className = 'suggestion';
       li.id = `suggestion-${i}`;

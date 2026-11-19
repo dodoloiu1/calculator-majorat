@@ -4,8 +4,7 @@
   "description": "Calculator estimativ costuri majorat - Photos by Dodo",
   "main": "index.html",
   "scripts": {
-    "start": "npx serve .",
-    "deploy": "vercel --prod"
+    "start": "npx serve ."
   },
   "keywords": [
     "majorat",

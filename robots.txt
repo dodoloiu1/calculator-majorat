@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dodoloiu1.github.io/calculator-majorat/sitemap.xml
